@@ -40,4 +40,4 @@ jobs:
           docker_builder="${{ steps.detect.outputs.wazuh_base }}/build-docker-images/build-images.sh"
           echo "Executing $docker_builder ..."
           chmod +x "$docker_builder"
-          bash "$script_path" 
+          /bin/bash "$docker_builder" 
