@@ -14,9 +14,11 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout repo
+      - name: Checkout PR branch
         uses: actions/checkout@v4
-
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
       - name: Detect submitted wazuh-docker folder
         id: detect
