@@ -23,7 +23,7 @@ jobs:
       - name: Detect submitted wazuh-docker folder
         id: detect
         run: |
-          wazuh_base=$(ls -d "$GITHUB_WORKSPACE"/wazuh-docker-* 2>/dev/null | head -n 1)
+          wazuh_base=$(find "$GITHUB_WORKSPACE" -maxdepth 2 -type d -name 'wazuh-docker-*' | head -n 1)
 
           if [ -z "$wazuh_base" ]; then
             echo "No wazuh-docker-* folder found in this PR."
@@ -31,10 +31,7 @@ jobs:
           fi
 
           echo "Detected folder: $wazuh_base"
-          echo "wazuh_base=$wazuh_base" >> $GITHUB_OUTPUT 
-
-      - name: Run build
-        run: |
-          wazuh_builder="${{ steps.detect.outputs.wazuh_base }}/build-docker-images/build-images.sh"
-          chmod +x $wazuh_builder
-          /bin/bash "$wazuh_builder"
+          if [ -n "$GITHUB_OUTPUT" ]; then
+            echo "wazuh_base=$wazuh_base" >> $GITHUB_OUTPUT
+          fi
+      
