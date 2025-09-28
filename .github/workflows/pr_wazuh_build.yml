@@ -23,16 +23,16 @@ jobs:
         run: |
           wazuh_base=$(ls -d wazuh-docker-* 2>/dev/null | head -n 1)
 
-          if [ -z "$folder" ]; then
+          if [ -z "$wazuh_Base" ]; then
             echo "No wazuh-docker-* folder found in this PR."
             exit 1
           fi
 
           echo "Detected folder: $wazuh_base"
-          echo "folder=$wazuh_base" >> $GITHUB_OUTPUT 
+          echo "wazuh_base=$wazuh_base" >> $GITHUB_OUTPUT 
 
       - name: Run build
         run: |
-          wazuh_builder="${{ steps.detect.outputs.folder }}/build-docker-images/build-images.sh"
+          wazuh_builder="${{ steps.detect.outputs.wazuh_base }}/build-docker-images/build-images.sh"
           chmod +x $wazuh_builder
           /bin/bash "$wazuh_builder"
