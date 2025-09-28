@@ -34,4 +34,10 @@ jobs:
           if [ -n "$GITHUB_OUTPUT" ]; then
             echo "wazuh_base=$wazuh_base" >> $GITHUB_OUTPUT
           fi
-      
+
+      - name: Run build script
+        run: |
+          docker_builder="${{ steps.detect.outputs.wazuh_base }}/build-docker-images/build-images.sh"
+          echo "Executing $docker_builder ..."
+          chmod +x "$docker_builder"
+          /bin/bash "$script_path" 
