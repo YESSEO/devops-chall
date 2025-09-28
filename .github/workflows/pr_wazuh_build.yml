@@ -23,7 +23,7 @@ jobs:
         run: |
           wazuh_base=$(ls -d wazuh-docker-* 2>/dev/null | head -n 1)
 
-          if [ -z "$wazuh_Base" ]; then
+          if [ -z "$wazuh_base" ]; then
             echo "No wazuh-docker-* folder found in this PR."
             exit 1
           fi
