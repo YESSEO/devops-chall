@@ -48,7 +48,7 @@ jobs:
 
   trivy-scan:
     runs-on: self-hosted
-    #needs: build-docker-images
+    needs: build-docker-images
     steps:
       - uses: actions/checkout@v4
         with:
@@ -81,3 +81,13 @@ jobs:
           trivy image --scanners vuln wazuh/wazuh-agent:${{ needs.build-docker-images.outputs.wazuh_version }} \
           --exit-code 1 --ignorefile "$GITHUB_WORKSPACE"/trivy/.trivyignore \
           --format json --output "$GITHUB_WORKSPACE"/reports/trivy/trivy-wazuh-agent.json
+
+
+  trivy-scan:
+    runs-on: self-hosted
+    needs: build-docker-images
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cleaning Local Docker Repo
+        # Delete all dockers because this is just a testing runner built for this
+        run: docker image rm (docker image ls -q)
