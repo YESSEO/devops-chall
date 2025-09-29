@@ -1,0 +1,318 @@
+{
+  "SchemaVersion": 2,
+  "CreatedAt": "2025-09-29T14:03:31.846176834+02:00",
+  "ArtifactName": "wazuh/wazuh-manager:4.13.1",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "Size": 1409353728,
+    "OS": {
+      "Family": "amazon",
+      "Name": "2023.8.20250915 (Amazon Linux)"
+    },
+    "ImageID": "sha256:0d4d8f0132caa7470b0e7493f5104b24c0378581f8bc1ca93ae40ba48e642f7f",
+    "DiffIDs": [
+      "sha256:611831670d342060c5df87a02272aeae0e6c1d15cf3edfec8da314a86837d317",
+      "sha256:af7f72fa6f463a1299a3bb2b22307cbb318f99b9ab3d70a0af09bfececfb9945",
+      "sha256:4b95776d2c46cd1557995c830e1a1938bc23745ba9d7bbe4718274249caca17c",
+      "sha256:99a4ac948353157ae93572066713333f4aa3c96523573ee1a3707cd6fc0b90da",
+      "sha256:b1d22f696cb4f833ce8283b041866f2963608e1083ff435a5300b2471bd06dd5",
+      "sha256:4c7f42be83fe26407f272a3b2ffa918bdd9c9fc2a8abc0113a387ab6eada96ee",
+      "sha256:6c4d812561c3995cb527e93a18677dd11ca4fc3cdeff30b3a51676bfdf971958",
+      "sha256:e259b700add0e3409340daff9275c704121090fd60b67114f6c8511e5be27a20",
+      "sha256:6012f55194a4b3cb4d5518ad776f34f8c0a3a32d48c2e9f21796197c8a3e67d6",
+      "sha256:be900840798970fb211c4ad16d11348d3c71782ee018f73e08184a6bc32e1332",
+      "sha256:018eea84af8551c4f11a66ed3e3109a54035346c8cf891b14e408b29fa2e7d53",
+      "sha256:7461aea51fa8d93908bceb64df7c4f5b1a9938f382508a8b2a93cfb8643adde0",
+      "sha256:f265fd206880500c0c0084de730657647f0922018a7b9799571d8b9051e7826f",
+      "sha256:584bd528863f56d4c357d48271a0fcb00a2a324e702e3d218d14020dbb94e444",
+      "sha256:ea189abe68d8e30ac2d187f99cc0fc5c626adb430053ed8afcf1cb1f312d920c",
+      "sha256:ebad4c2e0cff1ebf285e23f2d52083c952533eae69b419d4bd0dd19f01c3b0ba",
+      "sha256:d7bf6c44b6f50509d436244a22a15bc13057604c127172bc5f10917070fb294c"
+    ],
+    "RepoTags": [
+      "wazuh/wazuh-manager:4.13.1"
+    ],
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "2025-09-29T13:36:26.174952099+02:00",
+      "history": [
+        {
+          "created": "2025-09-16T20:09:20Z",
+          "created_by": "COPY /rootfs/ / # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-16T20:09:20Z",
+          "created_by": "CMD [\"/bin/bash\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-09-29T11:33:09Z",
+          "created_by": "RUN /bin/sh -c rm /bin/sh \u0026\u0026 ln -s /bin/bash /bin/sh # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:33:39Z",
+          "created_by": "ARG WAZUH_VERSION=4.13.1",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-09-29T11:33:39Z",
+          "created_by": "ARG WAZUH_TAG_REVISION=1",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-09-29T11:33:39Z",
+          "created_by": "ARG FILEBEAT_TEMPLATE_BRANCH=v4.13.1",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-09-29T11:33:39Z",
+          "created_by": "ARG FILEBEAT_CHANNEL=filebeat-oss",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-09-29T11:33:39Z",
+          "created_by": "ARG FILEBEAT_VERSION=7.10.2",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-09-29T11:33:39Z",
+          "created_by": "ARG WAZUH_FILEBEAT_MODULE=wazuh-filebeat-0.4.tar.gz",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-09-29T11:33:39Z",
+          "created_by": "ARG S6_VERSION=v2.2.0.3",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-09-29T11:33:39Z",
+          "created_by": "RUN |7 WAZUH_VERSION=4.13.1 WAZUH_TAG_REVISION=1 FILEBEAT_TEMPLATE_BRANCH=v4.13.1 FILEBEAT_CHANNEL=filebeat-oss FILEBEAT_VERSION=7.10.2 WAZUH_FILEBEAT_MODULE=wazuh-filebeat-0.4.tar.gz S6_VERSION=v2.2.0.3 /bin/sh -c yum install curl-minimal xz gnupg tar gzip openssl findutils procps -y \u0026\u0026    yum clean all # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:33:39Z",
+          "created_by": "COPY config/check_repository.sh / # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:33:39Z",
+          "created_by": "COPY config/filebeat_module.sh / # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:33:39Z",
+          "created_by": "COPY config/permanent_data.env config/permanent_data.sh / # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:33:40Z",
+          "created_by": "RUN |7 WAZUH_VERSION=4.13.1 WAZUH_TAG_REVISION=1 FILEBEAT_TEMPLATE_BRANCH=v4.13.1 FILEBEAT_CHANNEL=filebeat-oss FILEBEAT_VERSION=7.10.2 WAZUH_FILEBEAT_MODULE=wazuh-filebeat-0.4.tar.gz S6_VERSION=v2.2.0.3 /bin/sh -c chmod 775 /check_repository.sh # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:33:42Z",
+          "created_by": "RUN |7 WAZUH_VERSION=4.13.1 WAZUH_TAG_REVISION=1 FILEBEAT_TEMPLATE_BRANCH=v4.13.1 FILEBEAT_CHANNEL=filebeat-oss FILEBEAT_VERSION=7.10.2 WAZUH_FILEBEAT_MODULE=wazuh-filebeat-0.4.tar.gz S6_VERSION=v2.2.0.3 /bin/sh -c source /check_repository.sh # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:36:22Z",
+          "created_by": "RUN |7 WAZUH_VERSION=4.13.1 WAZUH_TAG_REVISION=1 FILEBEAT_TEMPLATE_BRANCH=v4.13.1 FILEBEAT_CHANNEL=filebeat-oss FILEBEAT_VERSION=7.10.2 WAZUH_FILEBEAT_MODULE=wazuh-filebeat-0.4.tar.gz S6_VERSION=v2.2.0.3 /bin/sh -c yum install wazuh-manager-${WAZUH_VERSION}-${WAZUH_TAG_REVISION} -y \u0026\u0026     yum clean all \u0026\u0026     chmod 775 /filebeat_module.sh \u0026\u0026     source /filebeat_module.sh \u0026\u0026     rm /filebeat_module.sh \u0026\u0026     curl --fail --silent -L https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz     -o /tmp/s6-overlay-amd64.tar.gz \u0026\u0026     tar xzf /tmp/s6-overlay-amd64.tar.gz -C / --exclude=\"./bin\" \u0026\u0026     tar xzf /tmp/s6-overlay-amd64.tar.gz -C /usr ./bin \u0026\u0026     rm  /tmp/s6-overlay-amd64.tar.gz # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:36:23Z",
+          "created_by": "COPY config/etc/ /etc/ # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:36:23Z",
+          "created_by": "COPY --chown=root:wazuh config/create_user.py /var/ossec/framework/scripts/create_user.py # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:36:23Z",
+          "created_by": "COPY config/filebeat.yml /etc/filebeat/ # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:36:23Z",
+          "created_by": "RUN |7 WAZUH_VERSION=4.13.1 WAZUH_TAG_REVISION=1 FILEBEAT_TEMPLATE_BRANCH=v4.13.1 FILEBEAT_CHANNEL=filebeat-oss FILEBEAT_VERSION=7.10.2 WAZUH_FILEBEAT_MODULE=wazuh-filebeat-0.4.tar.gz S6_VERSION=v2.2.0.3 /bin/sh -c chmod go-w /etc/filebeat/filebeat.yml # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:36:23Z",
+          "created_by": "ADD https://raw.githubusercontent.com/wazuh/wazuh/v4.13.1/extensions/elasticsearch/7.x/wazuh-template.json /etc/filebeat # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:36:24Z",
+          "created_by": "RUN |7 WAZUH_VERSION=4.13.1 WAZUH_TAG_REVISION=1 FILEBEAT_TEMPLATE_BRANCH=v4.13.1 FILEBEAT_CHANNEL=filebeat-oss FILEBEAT_VERSION=7.10.2 WAZUH_FILEBEAT_MODULE=wazuh-filebeat-0.4.tar.gz S6_VERSION=v2.2.0.3 /bin/sh -c chmod go-w /etc/filebeat/wazuh-template.json # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:36:25Z",
+          "created_by": "RUN |7 WAZUH_VERSION=4.13.1 WAZUH_TAG_REVISION=1 FILEBEAT_TEMPLATE_BRANCH=v4.13.1 FILEBEAT_CHANNEL=filebeat-oss FILEBEAT_VERSION=7.10.2 WAZUH_FILEBEAT_MODULE=wazuh-filebeat-0.4.tar.gz S6_VERSION=v2.2.0.3 /bin/sh -c mkdir -p /var/ossec/var/multigroups \u0026\u0026     chown root:wazuh /var/ossec/var/multigroups \u0026\u0026     chmod 770 /var/ossec/var/multigroups \u0026\u0026     mkdir -p /var/ossec/agentless \u0026\u0026     chown root:wazuh /var/ossec/agentless \u0026\u0026     chmod 770 /var/ossec/agentless \u0026\u0026     mkdir -p /var/ossec/active-response/bin \u0026\u0026     chown root:wazuh /var/ossec/active-response/bin \u0026\u0026     chmod 770 /var/ossec/active-response/bin \u0026\u0026     chmod 755 /permanent_data.sh \u0026\u0026     sync \u0026\u0026 /permanent_data.sh \u0026\u0026     sync \u0026\u0026 rm /permanent_data.sh # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:36:26Z",
+          "created_by": "RUN |7 WAZUH_VERSION=4.13.1 WAZUH_TAG_REVISION=1 FILEBEAT_TEMPLATE_BRANCH=v4.13.1 FILEBEAT_CHANNEL=filebeat-oss FILEBEAT_VERSION=7.10.2 WAZUH_FILEBEAT_MODULE=wazuh-filebeat-0.4.tar.gz S6_VERSION=v2.2.0.3 /bin/sh -c rm /etc/yum.repos.d/wazuh.repo # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-09-29T11:36:26Z",
+          "created_by": "EXPOSE \u0026{[{{66 0} {66 0}}] 0xc00cdac2c0}",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-09-29T11:36:26Z",
+          "created_by": "ENTRYPOINT [\"/init\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:611831670d342060c5df87a02272aeae0e6c1d15cf3edfec8da314a86837d317",
+          "sha256:af7f72fa6f463a1299a3bb2b22307cbb318f99b9ab3d70a0af09bfececfb9945",
+          "sha256:4b95776d2c46cd1557995c830e1a1938bc23745ba9d7bbe4718274249caca17c",
+          "sha256:99a4ac948353157ae93572066713333f4aa3c96523573ee1a3707cd6fc0b90da",
+          "sha256:b1d22f696cb4f833ce8283b041866f2963608e1083ff435a5300b2471bd06dd5",
+          "sha256:4c7f42be83fe26407f272a3b2ffa918bdd9c9fc2a8abc0113a387ab6eada96ee",
+          "sha256:6c4d812561c3995cb527e93a18677dd11ca4fc3cdeff30b3a51676bfdf971958",
+          "sha256:e259b700add0e3409340daff9275c704121090fd60b67114f6c8511e5be27a20",
+          "sha256:6012f55194a4b3cb4d5518ad776f34f8c0a3a32d48c2e9f21796197c8a3e67d6",
+          "sha256:be900840798970fb211c4ad16d11348d3c71782ee018f73e08184a6bc32e1332",
+          "sha256:018eea84af8551c4f11a66ed3e3109a54035346c8cf891b14e408b29fa2e7d53",
+          "sha256:7461aea51fa8d93908bceb64df7c4f5b1a9938f382508a8b2a93cfb8643adde0",
+          "sha256:f265fd206880500c0c0084de730657647f0922018a7b9799571d8b9051e7826f",
+          "sha256:584bd528863f56d4c357d48271a0fcb00a2a324e702e3d218d14020dbb94e444",
+          "sha256:ea189abe68d8e30ac2d187f99cc0fc5c626adb430053ed8afcf1cb1f312d920c",
+          "sha256:ebad4c2e0cff1ebf285e23f2d52083c952533eae69b419d4bd0dd19f01c3b0ba",
+          "sha256:d7bf6c44b6f50509d436244a22a15bc13057604c127172bc5f10917070fb294c"
+        ]
+      },
+      "config": {
+        "Entrypoint": [
+          "/init"
+        ],
+        "Env": [
+          "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+        ],
+        "Labels": {
+          "com.docker.compose.project": "build-docker-images",
+          "com.docker.compose.service": "wazuh.manager",
+          "com.docker.compose.version": "2.39.4"
+        },
+        "WorkingDir": "/",
+        "ExposedPorts": {
+          "1514/tcp": {},
+          "1515/tcp": {},
+          "1516/tcp": {},
+          "514/udp": {},
+          "55000/tcp": {}
+        }
+      }
+    },
+    "Layers": [
+      {
+        "Size": 154528256,
+        "DiffID": "sha256:611831670d342060c5df87a02272aeae0e6c1d15cf3edfec8da314a86837d317"
+      },
+      {
+        "Size": 3072,
+        "DiffID": "sha256:af7f72fa6f463a1299a3bb2b22307cbb318f99b9ab3d70a0af09bfececfb9945"
+      },
+      {
+        "Size": 15755776,
+        "DiffID": "sha256:4b95776d2c46cd1557995c830e1a1938bc23745ba9d7bbe4718274249caca17c"
+      },
+      {
+        "Size": 2560,
+        "DiffID": "sha256:99a4ac948353157ae93572066713333f4aa3c96523573ee1a3707cd6fc0b90da"
+      },
+      {
+        "Size": 2560,
+        "DiffID": "sha256:b1d22f696cb4f833ce8283b041866f2963608e1083ff435a5300b2471bd06dd5"
+      },
+      {
+        "Size": 10240,
+        "DiffID": "sha256:4c7f42be83fe26407f272a3b2ffa918bdd9c9fc2a8abc0113a387ab6eada96ee"
+      },
+      {
+        "Size": 3072,
+        "DiffID": "sha256:6c4d812561c3995cb527e93a18677dd11ca4fc3cdeff30b3a51676bfdf971958"
+      },
+      {
+        "Size": 3382272,
+        "DiffID": "sha256:e259b700add0e3409340daff9275c704121090fd60b67114f6c8511e5be27a20"
+      },
+      {
+        "Size": 1232197120,
+        "DiffID": "sha256:6012f55194a4b3cb4d5518ad776f34f8c0a3a32d48c2e9f21796197c8a3e67d6"
+      },
+      {
+        "Size": 23040,
+        "DiffID": "sha256:be900840798970fb211c4ad16d11348d3c71782ee018f73e08184a6bc32e1332"
+      },
+      {
+        "Size": 6656,
+        "DiffID": "sha256:018eea84af8551c4f11a66ed3e3109a54035346c8cf891b14e408b29fa2e7d53"
+      },
+      {
+        "Size": 3584,
+        "DiffID": "sha256:7461aea51fa8d93908bceb64df7c4f5b1a9938f382508a8b2a93cfb8643adde0"
+      },
+      {
+        "Size": 3584,
+        "DiffID": "sha256:f265fd206880500c0c0084de730657647f0922018a7b9799571d8b9051e7826f"
+      },
+      {
+        "Size": 87040,
+        "DiffID": "sha256:584bd528863f56d4c357d48271a0fcb00a2a324e702e3d218d14020dbb94e444"
+      },
+      {
+        "Size": 87040,
+        "DiffID": "sha256:ea189abe68d8e30ac2d187f99cc0fc5c626adb430053ed8afcf1cb1f312d920c"
+      },
+      {
+        "Size": 3255296,
+        "DiffID": "sha256:ebad4c2e0cff1ebf285e23f2d52083c952533eae69b419d4bd0dd19f01c3b0ba"
+      },
+      {
+        "Size": 2560,
+        "DiffID": "sha256:d7bf6c44b6f50509d436244a22a15bc13057604c127172bc5f10917070fb294c"
+      }
+    ]
+  },
+  "Results": [
+    {
+      "Target": "wazuh/wazuh-manager:4.13.1 (amazon 2023.8.20250915 (Amazon Linux))",
+      "Class": "os-pkgs",
+      "Type": "amazon"
+    },
+    {
+      "Target": "Python",
+      "Class": "lang-pkgs",
+      "Type": "python-pkg"
+    },
+    {
+      "Target": "usr/share/filebeat/bin/filebeat",
+      "Class": "lang-pkgs",
+      "Type": "gobinary"
+    }
+  ]
+}
