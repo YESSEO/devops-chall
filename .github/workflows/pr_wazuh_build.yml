@@ -83,7 +83,7 @@ jobs:
           --format json --output "$GITHUB_WORKSPACE"/reports/trivy/trivy-wazuh-agent.json
 
 
-  trivy-scan:
+  Clean-local-docker-repo:
     runs-on: self-hosted
     needs: build-docker-images
     steps:
