@@ -36,8 +36,6 @@ jobs:
           fi
 
       - name: Run build script
+        working-directory: ${{ steps.detect.outputs.wazuh_base }}
         run: |
-          docker_builder="${{ steps.detect.outputs.wazuh_base }}/build-docker-images/build-images.sh"
-          echo "Executing $docker_builder ..."
-          chmod +x "$docker_builder"
-          /bin/bash "$docker_builder" 
+          /bin/bash build-docker-images/build-images.sh
