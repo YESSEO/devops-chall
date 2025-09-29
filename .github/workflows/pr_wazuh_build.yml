@@ -55,26 +55,26 @@ jobs:
       - name: Trivy Scan - Wazuh Indexer
         run: |
           trivy image --scanners vuln wazuh/wazuh-indexer:${{ needs.build-docker-images.outputs.wazuh_version }} \
-          --exit-code 1 --ignorefile "GITHUB_WORKSPACE"/trivy/.trivyignore \
+          --exit-code 1 --ignorefile "$GITHUB_WORKSPACE"/trivy/.trivyignore \
           --format json --output "$GITHUB_WORKSPACE"/reports/trivy/trivy-wazuh-indexer.json \
 
 
       - name: Trivy Scan - Wazuh Dashboard
         run: |
           trivy image --scanners vuln wazuh/wazuh-dashboard:${{ needs.build-docker-images.outputs.wazuh_version }} \
-          --exit-code 1 --ignorefile "GITHUB_WORKSPACE"/trivy/.trivyignore \
+          --exit-code 1 --ignorefile "$GITHUB_WORKSPACE"/trivy/.trivyignore \
           --format json --output "$GITHUB_WORKSPACE"/reports/trivy/trivy-wazuh-dashboard.json
 
 
       - name: Trivy Scan - Wazuh Manager
         run: |
           trivy image --scanners vuln wazuh/wazuh-manager:${{ needs.build-docker-images.outputs.wazuh_version }} \
-          --exit-code 1 --ignorefile "GITHUB_WORKSPACE"/trivy/.trivyignore \
+          --exit-code 1 --ignorefile "$GITHUB_WORKSPACE"/trivy/.trivyignore \
           --format json --output "$GITHUB_WORKSPACE"/reports/trivy/trivy-wazuh-manager.json
 
 
       - name: Trivy Scan - Wazuh Agent
         run: |
           trivy image --scanners vuln wazuh/wazuh-agent:${{ needs.build-docker-images.outputs.wazuh_version }} \
-          --exit-code 1 --ignorefile "GITHUB_WORKSPACE"/trivy/.trivyignore \
+          --exit-code 1 --ignorefile "$GITHUB_WORKSPACE"/trivy/.trivyignore \
           --format json --output "$GITHUB_WORKSPACE"/reports/trivy/trivy-wazuh-agent.json
