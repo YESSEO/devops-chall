@@ -41,10 +41,8 @@ jobs:
           echo "Detected version: $wazuh_version"
 
           if [ -n "$GITHUB_OUTPUT" ]; then
-            {
-              echo "wazuh_base=$wazuh_base"
-              echo "wazuh_version=$wazuh_version"
-            } >> "$GITHUB_OUTPUT"
+              echo "wazuh_base=$wazuh_base" >> "$GITHUB_OUTPUT"
+              echo "wazuh_version=$wazuh_version" >> "GITHUB_OUTPUT"
           fi
 
       - name: Run build script
@@ -62,3 +60,10 @@ jobs:
       - name: Trivy Scan - [Wazuh Dashboard]
         run: trivy image wazuh/wazuh-indexer:${{ steps.detect.outputs.wazuh_version }} 
           #--format json --output reports/trivy/trivy-wazuh_dashboard.json
+  
+  clean_docker_local_repo:
+    runs-on: self-hosted
+    needs: trivy-Scan
+
+    steps:
+      - uses: actions/checkout@v4
