@@ -23,6 +23,7 @@ jobs:
       - name: Detect submitted wazuh-docker folder
         id: detect
         run: |
+          # Folder name (full path)
           wazuh_base=$(find "$GITHUB_WORKSPACE" -maxdepth 2 -type d -name 'wazuh-docker-*' | head -n 1)
 
           if [ -z "$wazuh_base" ]; then
@@ -30,12 +31,34 @@ jobs:
             exit 1
           fi
 
+          # Extract just the folder name from the path
+          folder_name=$(basename "$wazuh_base")
+
+          # Extract wazuh version from basename
+          wazuh_version="${folder_name#wazuh-docker-}"
+
           echo "Detected folder: $wazuh_base"
+          echo "Detected version: $wazuh_version"
+
           if [ -n "$GITHUB_OUTPUT" ]; then
-            echo "wazuh_base=$wazuh_base" >> $GITHUB_OUTPUT
+            {
+              echo "wazuh_base=$wazuh_base"
+              echo "wazuh_version=$wazuh_version"
+            } >> "$GITHUB_OUTPUT"
           fi
 
       - name: Run build script
         working-directory: ${{ steps.detect.outputs.wazuh_base }}
         run: |
           /bin/bash build-docker-images/build-images.sh
+    
+  # Scanning each machine solo so we know what failed without going thru logs
+  trivy-Scan:
+    runs-on: self-hosted
+    needs: build-docker-images
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trivy Scan - [Wazuh Dashboard]
+        run: trivy image wazuh/wazuh-indexer:${{ steps.detect.outputs.wazuh_version }} 
+          #--format json --output reports/trivy/trivy-wazuh_dashboard.json
