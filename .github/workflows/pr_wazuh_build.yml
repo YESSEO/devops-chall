@@ -90,4 +90,4 @@ jobs:
       - uses: actions/checkout@v4
       - name: Cleaning Local Docker Repo
         # Delete all dockers because this is just a testing runner built for this
-        run: docker image rm (docker image ls -q)
+        run: docker image rm $(docker image ls -q)
