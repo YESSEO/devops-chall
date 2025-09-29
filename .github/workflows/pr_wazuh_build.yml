@@ -51,7 +51,25 @@ jobs:
     needs: build-docker-images
     steps:
       - uses: actions/checkout@v4
+
       - name: Trivy Scan - Wazuh Indexer
         run: |
-          echo "Using version: ${{ needs.build-docker-images.outputs.wazuh_version }}"
-          trivy image wazuh/wazuh-indexer:${{ needs.build-docker-images.outputs.wazuh_version }}
+          trivy image wazuh/wazuh-indexer:${{ needs.build-docker-images.outputs.wazuh_version }} \
+          --format json --output reports/trivy/trivy-wazuh-indexer.json
+
+      - name: Trivy Scan - Wazuh Dashboard
+        run: |
+          trivy image wazuh/wazuh-dashboard:${{ needs.build-docker-images.outputs.wazuh_version }} \
+          --format json --output reports/trivy/trivy-wazuh-dashboard.json
+
+
+      - name: Trivy Scan - Wazuh Manager
+        run: |
+          trivy image wazuh/wazuh-manager:${{ needs.build-docker-images.outputs.wazuh_version }} \
+          --format json --output reports/trivy/trivy-wazuh-manager.json
+
+
+      - name: Trivy Scan - Wazuh Agent
+        run: |
+          trivy image wazuh/wazuh-agent:${{ needs.build-docker-images.outputs.wazuh_version }} \
+          --format json --output reports/trivy/trivy-wazuh-agent.json
