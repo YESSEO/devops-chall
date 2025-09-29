@@ -51,6 +51,9 @@ jobs:
     #needs: build-docker-images
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: pre-prod
+          fetch-depth: 0
 
       - name: Trivy Scan - Wazuh Indexer
         run: |
