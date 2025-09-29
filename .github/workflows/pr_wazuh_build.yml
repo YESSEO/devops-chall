@@ -10,45 +10,45 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-docker-images:
-    runs-on: self-hosted
-    outputs:
-      wazuh_base: ${{ steps.detect.outputs.wazuh_base }}
-      wazuh_version: ${{ steps.detect.outputs.wazuh_version }}
-    steps:
-      - name: Checkout PR branch
-        uses: actions/checkout@v4
-        with:
-          ref: pre-prod
-          fetch-depth: 0
+  # build-docker-images:
+  #   runs-on: self-hosted
+  #   outputs:
+  #     wazuh_base: ${{ steps.detect.outputs.wazuh_base }}
+  #     wazuh_version: ${{ steps.detect.outputs.wazuh_version }}
+  #   steps:
+  #     - name: Checkout PR branch
+  #       uses: actions/checkout@v4
+  #       with:
+  #         ref: pre-prod
+  #         fetch-depth: 0
 
-      - name: Detect submitted wazuh-docker folder
-        id: detect
-        run: |
-          wazuh_base=$(find "$GITHUB_WORKSPACE" -maxdepth 2 -type d -name 'wazuh-docker-*' | head -n 1)
+  #     - name: Detect submitted wazuh-docker folder
+  #       id: detect
+  #       run: |
+  #         wazuh_base=$(find "$GITHUB_WORKSPACE" -maxdepth 2 -type d -name 'wazuh-docker-*' | head -n 1)
 
-          if [ -z "$wazuh_base" ]; then
-            echo "No wazuh-docker-* folder found in this PR."
-            exit 1
-          fi
+  #         if [ -z "$wazuh_base" ]; then
+  #           echo "No wazuh-docker-* folder found in this PR."
+  #           exit 1
+  #         fi
 
-          folder_name=$(basename "$wazuh_base")
-          wazuh_version="${folder_name#wazuh-docker-}"
+  #         folder_name=$(basename "$wazuh_base")
+  #         wazuh_version="${folder_name#wazuh-docker-}"
 
-          echo "Detected folder: $wazuh_base"
-          echo "Detected version: $wazuh_version"
+  #         echo "Detected folder: $wazuh_base"
+  #         echo "Detected version: $wazuh_version"
 
-          echo "wazuh_base=$wazuh_base" >> "$GITHUB_OUTPUT"
-          echo "wazuh_version=$wazuh_version" >> "$GITHUB_OUTPUT"
+  #         echo "wazuh_base=$wazuh_base" >> "$GITHUB_OUTPUT"
+  #         echo "wazuh_version=$wazuh_version" >> "$GITHUB_OUTPUT"
 
-      - name: Run build script
-        working-directory: ${{ steps.detect.outputs.wazuh_base }}
-        run: |
-          /bin/bash build-docker-images/build-images.sh
+  #     - name: Run build script
+  #       working-directory: ${{ steps.detect.outputs.wazuh_base }}
+  #       run: |
+  #         /bin/bash build-docker-images/build-images.sh
 
   trivy-scan:
     runs-on: self-hosted
-    needs: build-docker-images
+    #needs: build-docker-images
     steps:
       - uses: actions/checkout@v4
 
