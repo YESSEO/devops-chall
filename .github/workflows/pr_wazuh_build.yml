@@ -92,7 +92,7 @@ jobs:
           fetch-depth: 0
 
       - name: building certs
-        working-directory: ${{ steps.detect.outputs.wazuh_base }}/multi-node
+        working-directory: ${{ needs.detect.outputs.wazuh_base }}/multi-node
         # Generate certs
         run: |
           docker compose -f generate-indexer-certs.yml run --rm generator && \
@@ -101,7 +101,7 @@ jobs:
 
   Clean-local-docker-repo:
     runs-on: self-hosted
-    needs: trivy-scan
+    needs: deploy-test
     steps:
       - uses: actions/checkout@v4
       - name: Cleaning Local Docker Repo
