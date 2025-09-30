@@ -92,7 +92,7 @@ jobs:
           fetch-depth: 0
 
       - name: building certs
-        working-directory: ${{ needs.detect.outputs.wazuh_base }}/multi-node
+        working-directory: ${{ needs.build-docker-images.outputs.wazuh_base }}/multi-node
         # Generate certs
         run: |
           docker compose -f generate-indexer-certs.yml run --rm generator && \
