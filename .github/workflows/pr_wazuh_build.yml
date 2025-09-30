@@ -84,7 +84,7 @@ jobs:
 
   deploy-test:
     runs-on: self-hosted
-    needs: trivy-scan
+    needs: [build-docker-images, trivy-scan]
     steps:
       - uses: actions/checkout@v4
         with:
