@@ -82,6 +82,22 @@ jobs:
           --ignorefile "$GITHUB_WORKSPACE"/trivy/.trivyignore \
           --format json --output "$GITHUB_WORKSPACE"/reports/trivy/trivy-wazuh-agent.json
 
+  deploy-test:
+    runs-on: self-hosted
+    needs: trivy-scan
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: pre-prod
+          fetch-depth: 0
+
+      - name: building certs
+        working-directory: ${{ steps.detect.outputs.wazuh_base }}/multi-node
+        # Generate certs
+        run: |
+          docker compose -f generate-indexer-certs.yml run --rm generator && \
+          docker compose up -d
+
 
   Clean-local-docker-repo:
     runs-on: self-hosted
