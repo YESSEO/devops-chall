@@ -21,6 +21,7 @@ jobs:
         with:
           ref: pre-prod
           fetch-depth: 0
+          clean: false
 
       - name: Detect submitted wazuh-docker folder
         id: detect
