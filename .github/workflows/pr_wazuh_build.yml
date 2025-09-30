@@ -98,12 +98,24 @@ jobs:
           docker compose -f generate-indexer-certs.yml run --rm generator && \
           docker compose up -d
 
-
-  Clean-local-docker-repo:
+  selenium-test:
     runs-on: self-hosted
-    needs: deploy-test
+    environment: stagging
+    needs: [build-docker-images, trivy-scan, deploy-test]
     steps:
       - uses: actions/checkout@v4
-      - name: Cleaning Local Docker Repo
-        # Delete all dockers because this is just a testing runner built for this
-        run: docker image rm $(docker image ls -q)
+        with:
+          ref: pre-prod
+          fetch-depth: 0
+
+      - name: Selenium test
+        working-directory: $GITHUB_WORKSPACE/test/selenium/
+        run: |
+          chmod +x local_test.sh
+          /bin/bash DEBUG=1 \ WAZUH_URL=https://127.0.0.1 \
+           WAZUH_USER=<(echo ${{ secrets.WAZUH_USER }}) \
+           WAZUH_PASS=<(echo ${{ secrets.WAZUH_PASS }}) \
+           API_URL=https://127.0.0.1:55000 \
+           API_USER=<(echo ${{ secrets.API_USER }}) \
+           API_PASS=<(echo ${{ secrets.API_PASS }}) \
+           local_test.sh 
