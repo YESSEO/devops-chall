@@ -40,11 +40,12 @@ check_dashboard() {
     curl_exit=$?
     body=$(cat /tmp/resp.txt)
 
-    if [ $curl_exit -eq 0 ] && [ "$response" -eq 200 ] && [[ -n "$body" ]] && \ 
-          [[ "$body" != *"Wazuh dashboard server is not ready yet"* ]]; then
+    if [ $curl_exit -eq 0 ] && [ "$response" -eq 200 ] && [[ -n "$body" ]] && [[ "$body" != *"Wazuh dashboard server is not ready yet"* ]]; then
       echo "[SUCCESS] Wazuh dashboard is ready (HTTP 200, correct response)."
       return 0
-    fi
+    else
+      echo "[INFO] ($response) waiting ..."
+    fi 
 
     retries=$((retries-1))
     echo "[INFO] Not ready yet, retrying in $DELAY seconds... ($retries retries left)"
