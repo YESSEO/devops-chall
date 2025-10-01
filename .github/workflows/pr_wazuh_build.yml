@@ -152,7 +152,7 @@ jobs:
         with:
           ref: pre-prod
           fetch-depth: 0
-          cealn: false
+          clean: false
       - name: Run Selenium tests
         working-directory: tests/selenium/
         run: |
@@ -169,14 +169,7 @@ jobs:
     steps:
       - name: Cleanup Docker containers
         run: |
-          echo "[INFO] Listing all running containers..."
-          containers=$(docker ps -aq)
-          if [ -n "$containers" ]; then
-            echo "[INFO] Stopping running containers..."
-            docker stop $containers
-            echo "[INFO] Removing containers..."
-            docker rm $containers
-          else
-            echo "[INFO] No containers to stop/remove."
-          fi
-
+         images=$(docker image ls -q) && \
+         [ -n "$images" ] && docker image rm -f $images || true; \
+         containers=$(docker ps -a -q) && \
+         [ -n "$containers" ] && docker stop $containers && docker rm $containers || true 
