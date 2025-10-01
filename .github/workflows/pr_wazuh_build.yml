@@ -113,7 +113,7 @@ jobs:
           clean: false
 
       - name: Selenium test
-        working-directory: $GITHUB_WORKSPACE/test/selenium/
+        working-directory: $GITHUB_WORKSPACE/tests/selenium/
         run: |
           chmod +x local_test.sh && chmod +x wazuh_init_check.sh
           /bin/bash wazuh_init_check.sh && DEBUG=1 \ WAZUH_URL=https://127.0.0.1 \
