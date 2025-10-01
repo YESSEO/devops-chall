@@ -91,6 +91,7 @@ jobs:
         with:
           ref: pre-prod
           fetch-depth: 0
+          clean: false
 
       - name: building certs
         working-directory: ${{ needs.build-docker-images.outputs.wazuh_base }}/multi-node
@@ -112,8 +113,8 @@ jobs:
       - name: Selenium test
         working-directory: $GITHUB_WORKSPACE/test/selenium/
         run: |
-          chmod +x local_test.sh
-          /bin/bash DEBUG=1 \ WAZUH_URL=https://127.0.0.1 \
+          chmod +x local_test.sh && chmod +x wazuh_init_check.sh
+          /bin/bash wazuh_init_check.sh && DEBUG=1 \ WAZUH_URL=https://127.0.0.1 \
            WAZUH_USER=<(echo ${{ secrets.WAZUH_USER }}) \
            WAZUH_PASS=<(echo ${{ secrets.WAZUH_PASS }}) \
            API_URL=https://127.0.0.1:55000 \
