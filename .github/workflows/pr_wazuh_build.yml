@@ -104,7 +104,7 @@ jobs:
   selenium-test:
     runs-on: self-hosted
     environment: stagging
-    needs: [build-docker-images, trivy-scan, deploy-test]
+    needs: [deploy-test]
     steps:
       - uses: actions/checkout@v4
         with:
