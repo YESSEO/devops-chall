@@ -142,6 +142,7 @@ jobs:
         with:
           ref: pre-prod
           fetch-depth: 0
+          cealn: false
       - name: Run Selenium tests
         working-directory: tests/selenium/
         run: |
