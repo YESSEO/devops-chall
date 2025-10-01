@@ -152,3 +152,41 @@ jobs:
           ./local_test.sh
 
  
+  clean_local:
+    runs-on: self-hosted
+    environment: staging
+    needs: [selenium-test_python, deploy-test]
+    steps:
+      - name: Cleanup Docker containers
+        run: |
+          echo "[INFO] Listing all running containers..."
+          containers=$(docker ps -aq)
+          if [ -n "$containers" ]; then
+            echo "[INFO] Stopping running containers..."
+            docker stop $containers
+            echo "[INFO] Removing containers..."
+            docker rm $containers
+          else
+            echo "[INFO] No containers to stop/remove."
+          fi
+
+      - name: Cleanup Docker images
+        run: |
+          echo "[INFO] Listing all images..."
+          images=$(docker images -q)
+          if [ -n "$images" ]; then
+            echo "[INFO] Removing Docker images..."
+            docker rmi -f $images
+          else
+            echo "[INFO] No images to remove."
+          fi
+
+      - name: Cleanup SSL certificates
+        run: |
+          CERT_DIR="wazuh-docker-4.13.1/multi-node/config/wazuh_indexer_ssl_certs"
+          if [ -d "$CERT_DIR" ]; then
+            echo "[INFO] Removing SSL certificate directory..."
+            sudo rm -rf "$CERT_DIR"
+          else
+            echo "[INFO] SSL certificate directory does not exist, skipping."
+          fi 
