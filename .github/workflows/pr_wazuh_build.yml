@@ -125,6 +125,16 @@ jobs:
           --max-retries 100 \
           --delay 20
 
+      - name: Cleanup SSL certificates
+        run: |
+          CERT_DIR="wazuh-docker-4.13.1/multi-node/config/wazuh_indexer_ssl_certs"
+          if [ -d "$CERT_DIR" ]; then
+            echo "[INFO] Removing SSL certificate directory..."
+            sudo rm -rf "$CERT_DIR"
+          else
+            echo "[INFO] SSL certificate directory does not exist, skipping."
+          fi 
+
   selenium-test_python:
     runs-on: self-hosted
     environment: stagging
@@ -152,7 +162,7 @@ jobs:
           ./local_test.sh
 
  
-  clean_local:
+  clean_local_dockers:
     runs-on: self-hosted
     environment: staging
     needs: [selenium-test_python, deploy-test]
@@ -170,23 +180,3 @@ jobs:
             echo "[INFO] No containers to stop/remove."
           fi
 
-      - name: Cleanup Docker images
-        run: |
-          echo "[INFO] Listing all images..."
-          images=$(docker images -q)
-          if [ -n "$images" ]; then
-            echo "[INFO] Removing Docker images..."
-            docker rmi -f $images
-          else
-            echo "[INFO] No images to remove."
-          fi
-
-      - name: Cleanup SSL certificates
-        run: |
-          CERT_DIR="wazuh-docker-4.13.1/multi-node/config/wazuh_indexer_ssl_certs"
-          if [ -d "$CERT_DIR" ]; then
-            echo "[INFO] Removing SSL certificate directory..."
-            sudo rm -rf "$CERT_DIR"
-          else
-            echo "[INFO] SSL certificate directory does not exist, skipping."
-          fi 
