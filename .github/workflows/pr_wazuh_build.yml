@@ -116,5 +116,5 @@ jobs:
       - name: Selenium test
         working-directory: tests/selenium/
         run: |
-          chmod +x wazuh_init_check.sh && chmod +x local_test.sh ./wazuh_init_check.sh && WAZUH_URL='https://127.0.0.1' WAZUH_USER='admin' WAZUH_PASS='SecretPassword' API_URL='https://127.0.0.1:55000' API_USER='wazuh-wui' API_PASS='MyS3cr37P450r.*-' ./local_test.sh
+          chmod +x wazuh_init_check.sh && chmod +x local_test.sh && ./wazuh_init_check.sh && WAZUH_URL='https://127.0.0.1' WAZUH_USER='admin' WAZUH_PASS='SecretPassword' API_URL='https://127.0.0.1:55000' API_USER='wazuh-wui' API_PASS='MyS3cr37P450r.*-' ./local_test.sh
           
