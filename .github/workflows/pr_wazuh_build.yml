@@ -96,7 +96,6 @@ jobs:
 
       - name: Compose up
         working-directory: ${{ needs.build-docker-images.outputs.wazuh_base }}/multi-node
-        working-directory: wazuh-docker-4.13.1/multi-node
         # Generate certs
         run: |
           docker compose -f generate-indexer-certs.yml run --rm generator && \
