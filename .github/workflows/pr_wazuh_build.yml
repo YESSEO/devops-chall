@@ -55,6 +55,7 @@ jobs:
         with:
           ref: pre-prod
           fetch-depth: 0
+          clean: false
 
       - name: Trivy Scan - Wazuh Indexer
         run: |
@@ -109,6 +110,7 @@ jobs:
         with:
           ref: pre-prod
           fetch-depth: 0
+          clean: false
 
       - name: Selenium test
         working-directory: $GITHUB_WORKSPACE/test/selenium/
