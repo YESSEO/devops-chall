@@ -102,7 +102,7 @@ jobs:
 
   wait-dashboard-api:
     runs-on: self-hosted
-    environment: staging
+    environment: stagging
     needs: [deploy-test]
     steps:
       - name: Checkout code
@@ -127,7 +127,7 @@ jobs:
 
   selenium-test_python:
     runs-on: self-hosted
-    environment: staging
+    environment: stagging
     needs: [wait-dashboard-api]
     env:
       WAZUH_URL: https://127.0.0.1
@@ -150,3 +150,5 @@ jobs:
           chmod +x local_test.sh
           # Execute the tests
           ./local_test.sh
+
+ 
