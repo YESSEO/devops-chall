@@ -84,16 +84,19 @@ wait_for_port() {
 # =========================
 check_dashboard() {
     local retries=$MAX_RETRIES
+    local tmpfile
+    tmpfile=$(mktemp)
 
     echo "[INFO] Checking Wazuh dashboard on port $PORT1..."
     while [ "$retries" -gt 0 ]; do
-        response=$(curl -sk -w "%{http_code}" -o /tmp/resp.txt "https://$HOST/app/login?")
+        response=$(curl -sk -w "%{http_code}" -o "$tmpfile" "https://$HOST/app/login?")
         curl_exit=$?
-        body=$(cat /tmp/resp.txt)
+        body=$(cat "$tmpfile")
 
         if [ $curl_exit -eq 0 ] && [ "$response" -eq 200 ] && [[ -n "$body" ]] && \
            [[ "$body" == *"/ui/favicons/browserconfig.xml"* ]]; then
             echo "[SUCCESS] Wazuh dashboard is fully ready (HTTP 200)."
+            rm -f "$tmpfile"
             return 0
         else
             echo "[INFO] ($response) waiting ..."
@@ -104,6 +107,7 @@ check_dashboard() {
         sleep "$DELAY"
     done
 
+    rm -f "$tmpfile"
     echo "[ERROR] Wazuh dashboard did not become ready."
     exit 1
 }
@@ -113,15 +117,18 @@ check_dashboard() {
 # =========================
 check_api() {
     local retries=$MAX_RETRIES
+    local tmpfile
+    tmpfile=$(mktemp)
 
     echo "[INFO] Checking Wazuh API on port $PORT2..."
     while [ "$retries" -gt 0 ]; do
-        response=$(curl -sk -w "%{http_code}" -o /tmp/api_resp.txt "https://$HOST:$PORT2")
+        response=$(curl -sk -w "%{http_code}" -o "$tmpfile" "https://$HOST:$PORT2")
         curl_exit=$?
-        body=$(cat /tmp/api_resp.txt)
+        body=$(cat "$tmpfile")
 
         if [ $curl_exit -eq 0 ] && [ "$response" -eq 401 ] && [[ "$body" == *"No authorization token provided"* ]]; then
             echo "[SUCCESS] Wazuh API is ready (HTTP 401)."
+            rm -f "$tmpfile"
             return 0
         fi
 
@@ -130,6 +137,7 @@ check_api() {
         sleep "$DELAY"
     done
 
+    rm -f "$tmpfile"
     echo "[ERROR] Wazuh API did not respond correctly."
     exit 1
 }
