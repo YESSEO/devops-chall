@@ -6,8 +6,8 @@
 HOST="localhost"
 PORT1=443
 PORT2=55000
-MAX_RETRIES=60
-DELAY=15
+MAX_RETRIES=100
+DELAY=20
 
 # =========================
 # Function to wait for port
@@ -68,7 +68,7 @@ check_api() {
     curl_exit=$?
     body=$(cat /tmp/api_resp.txt)
 
-    if [ $curl_exit -eq 0 ] [ "$response" -eq 401 ] && [[ "$body" == *"No authorization token provided"* ]]; then
+    if [ $curl_exit -eq 0 ] &&  [ "$response" -eq 401 ] && [[ "$body" == *"No authorization token provided"* ]]; then
       echo "[SUCCESS] Wazuh API is ready (HTTP 401, correct JSON response)."
       return 0
     fi
