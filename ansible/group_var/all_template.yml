@@ -1,0 +1,42 @@
+# --------------------------------------------
+# ---- Mapping global configs
+
+nfs_mount_point: "$NFS_BASE"
+base_dir: "$GITHUB_WORKSPACE"
+wazuh_base: "{{ nfs_mount_point }}/wazuh"
+generate_certs_path: "/generate-indexer-certs.yml"
+nfsserverip: "$NFS_SERVER_IP"
+wazuh_version: "$WAZUH_VERSION"
+docker_wazuh_base: "/wazuh-docker-{{ wazuh_version }}/multi-node"
+wazuh_compose_file: "{{ nfs_mount_point }}{{ docker_wazuh_base }}/docker-compose.yml"
+indexers_cert_file: "{{ nfs_mount_point }}{{ docker_wazuh_base }}/generate-indexer-certs.yml"
+
+# --------------------------------------------
+# ---- Keepalived
+keepalived_vrrp_password: "{{ vault_keepalived_vrrp_password }}"
+virtual_ip: "$KEEPALIVED_VIRTUAL_IP"
+
+
+# --------------------------------------------
+# ---- Ansible vault
+
+# Indexer/ Dashboard
+indexerusername: "{{ vault_indexer_username }}"
+indexerpassword: "{{ vault_indexer_password }}"
+
+# Master api
+apiusername: "{{ vault_api_username }}"
+apipassword: "{{ vault_api_password }}"
+
+# KIBANA Creds
+dashboardusername: "{{ vault_dashboard_username }}"
+dashboardpassowrd: "{{ vault_dashboard_password }}"
+
+# --------------------------------------------
+# ---- Nginx
+
+server_name: localhost
+ssl_cert_path: /etc/nginx/certs/test.crt
+ssl_key_path: /etc/nginx/certs/test.key
+backend_host: 127.0.0.1
+backend_port: 8443
