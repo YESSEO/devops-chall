@@ -1,0 +1,9 @@
+- name: Verify Host Connectivity
+  ansible.builtin.ping:
+  register: ping_result
+  ignore_errors: true
+
+- name: Terminate if ping failed
+  ansible.builtin.fail:
+    msg: "Ping failed on one or more hosts. Terminating playbook."
+  when: ping_result is failed
