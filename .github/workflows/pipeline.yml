@@ -124,7 +124,7 @@ jobs:
 
   ansible_deploy_stack:
     runs-on: self-hosted
-    environment: all
+    environment: prod
     needs: ansible_docker_nfs_vvrp_dependencies
     steps:
       - name: Checkout repository
@@ -140,7 +140,7 @@ jobs:
 
   ansible_deploy_nginx:
     runs-on: self-hosted
-    environment: all
+    environment: prod
     needs: ansible_deploy_stack
     steps:
       - name: Checkout repository
