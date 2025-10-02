@@ -1,0 +1,5 @@
+- name: Join swarm as worker
+  ansible.builtin.command: "{{ hostvars[groups['managers'][0]].worker_join_command }}"
+  register: swarm_join
+  failed_when: swarm_join.rc not in [0, 1]
+  changed_when: swarm_join.rc == 0
