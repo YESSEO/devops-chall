@@ -103,7 +103,7 @@ jobs:
   wait-dashboard-api:
     runs-on: self-hosted
     environment: stagging
-    needs: [deploy-test]
+    needs: [deploy-test, build-docker]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -127,7 +127,8 @@ jobs:
 
       - name: Cleanup SSL certificates
         run: |
-          CERT_DIR="wazuh-docker-4.13.1/multi-node/config/wazuh_indexer_ssl_certs"
+          CERT_DIR="${{ needs.build-docker-images.outputs.wazuh_base }}/multi-node/config/wazuh_indexer_ssl_certs"
+          #CERT_DIR="wazuh-docker-4.13.1/multi-node/config/wazuh_indexer_ssl_certs"
           if [ -d "$CERT_DIR" ]; then
             echo "[INFO] Removing SSL certificate directory..."
             sudo rm -rf "$CERT_DIR"
