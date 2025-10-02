@@ -1,0 +1,43 @@
+- name: Ensure the base wazuh directory exists for shared storage
+  ansible.builtin.file:
+    path: "{{ wazuh_base }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Ensure all Wazuh subdirectories exist (Shared storage)
+  ansible.builtin.file:
+    path: "{{ wazuh_base }}/{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - master/api/configuration
+    - master/etc
+    - master/logs
+    - master/queue
+    - master/var-multigroups
+    - master/integrations
+    - master/active-response
+    - master/agentless
+    - master/wodles
+    - master/filebeat-etc
+    - master/filebeat-var
+    - worker/api/configuration
+    - worker/etc
+    - worker/logs
+    - worker/queue
+    - worker/var-multigroups
+    - worker/integrations
+    - worker/active-response
+    - worker/agentless
+    - worker/wodles
+    - worker/filebeat-etc
+    - worker/filebeat-var
+    - indexer1
+    - indexer2
+    - indexer3
+    - dashboard/config
+    - dashboard/custom
