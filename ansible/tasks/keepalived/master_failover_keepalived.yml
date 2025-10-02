@@ -1,0 +1,13 @@
+- name: Copy Keepalived config from template
+  ansible.builtin.template:
+    src: "{{ base_dir }}/ansible/templates/keepalived.j2"
+    dest: /etc/keepalived/keepalived.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Ensure Keepalived service is running
+  ansible.builtin.service:
+    name: keepalived
+    state: started
+    enabled: true
