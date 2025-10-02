@@ -40,6 +40,9 @@ jobs:
                     exit 1
             fi
 
+            # check if inventory folder exists it, create
+            if [[ ! -d "$output_file" ]]; then
+              mkdir "$GITHUB_WORKSPACE/ansible/inventory"
             set -a 
             envsubst < "$inventory_template" > "$output_file"
             set +a 
