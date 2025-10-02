@@ -10,7 +10,6 @@ jobs:
 
   ansible_dependencies:
     runs-on: self-hosted
-    ref: main
     environment: prod
     env:
       ANSIBLE_USER: ${{ vars.ANSIBLE_USER }}
