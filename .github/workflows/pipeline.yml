@@ -136,3 +136,19 @@ jobs:
         run: |
           ANSIBLE_VAULT_PASSWORD_FILE=<(echo ${{ secrets.ANSIBLE_VAULT_SECRET }}) ansible-playbook -i ansible/inventory/inventory.ini \
             ansible/playbooks/stack_deploy.yaml
+
+
+  ansible_deploy_nginx:
+    runs-on: self-hosted
+    environment: all
+    needs: ansible_deploy_stack
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: Configure Nginx reverse proxy (self-signed certificates, no domain - no money -\__(;-;)__/- )
+        run: |
+          ANSIBLE_VAULT_PASSWORD_FILE=<(echo ${{ secrets.ANSIBLE_VAULT_SECRET }}) ansible-playbook -i ansible/inventory/inventory.ini \
+            ansible/playbooks/nginx_reverse_proxy.yaml
