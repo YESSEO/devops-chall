@@ -1,0 +1,7 @@
+- name: Copy Nginx config from template
+  ansible.builtin.template:
+    src: "{{ base_dir }}/ansible/templates/nginx_proxy.conf.j2"
+    dest: /etc/nginx/conf.d/test.conf
+    owner: root
+    group: root
+    mode: '0643'
