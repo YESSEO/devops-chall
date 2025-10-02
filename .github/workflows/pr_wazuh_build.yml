@@ -103,7 +103,7 @@ jobs:
   wait-dashboard-api:
     runs-on: self-hosted
     environment: stagging
-    needs: [deploy-test, build-docker]
+    needs: [deploy-test, build-docker-images]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
