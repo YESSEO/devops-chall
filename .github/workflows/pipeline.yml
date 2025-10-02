@@ -10,6 +10,7 @@ jobs:
 
   ansible_dependencies:
     runs-on: self-hosted
+    ref: main
     environment: prod
     env:
       ANSIBLE_USER: ${{ vars.ANSIBLE_USER }}
@@ -32,8 +33,8 @@ jobs:
         run: |
 
             # Init Inventory
-            inventory_template="$GITHUB_WORKSPACE/ansible/templates/inventory.example.ini"
-            output_file="$GITHUB_WORKSPACE/ansible/inventory/inventory.ini"
+            inventory_template="ansible/templates/inventory.example.ini"
+            output_file="ansible/inventory/inventory.ini"
 
             if [ ! -f "$inventory_template" ]; then
                     echo "[ERROR] Missing inventory template: $inventory_template"
@@ -42,7 +43,7 @@ jobs:
 
             # check if inventory folder exists it, create
             if [[ ! -d "$output_file" ]]; then
-              mkdir "$GITHUB_WORKSPACE/ansible/inventory"
+              mkdir "ansible/inventory"
             set -a 
             envsubst < "$inventory_template" > "$output_file"
             set +a 
@@ -51,8 +52,8 @@ jobs:
 
       - name: Generate Ansible Variables from template
         run: |
-            vars_template="$GITHUB_WORKSPACE/ansible/group_vars/all_template.yml"
-            vars_output="$GITHUB_WORKSPACE/ansible/group_vars/all.yml"
+            vars_template="ansible/group_vars/all_template.yml"
+            vars_output="ansible/group_vars/all.yml"
 
             if [ ! -f "$vars_template" ]; then
             echo "[ERROR] Missing vars template: $vars_template"
@@ -67,7 +68,7 @@ jobs:
       - name: Copy Ansible vaults and NGINX Proxy certificates from secrets
         run: |
           # Define Cer folder and files
-          cert_folder="$GITHUB_WORKSPACE/ansible/group_vars/secrets/certs"
+          cert_folder="ansible/group_vars/secrets/certs"
           cert_file="$cert_folder/test.crt"
 
           # Ensure the folder exists
