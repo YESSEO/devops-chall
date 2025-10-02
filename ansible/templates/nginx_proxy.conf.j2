@@ -1,0 +1,14 @@
+server {
+    listen 443 ssl;
+    server_name {{ server_name | default('localhost') }};
+
+    ssl_certificate {{ ssl_cert_path | default('/etc/nginx/certs/test.crt') }};
+    ssl_certificate_key {{ ssl_key_path | default('/etc/nginx/certs/test.key') }};
+
+    location / {
+        proxy_pass https://{{ virtual_ip | default('127.0.0.1') }}:{{ backend_port | default('8443') }};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_ssl_verify off;   # ignore backend cert errors for testing
+    }
+}
