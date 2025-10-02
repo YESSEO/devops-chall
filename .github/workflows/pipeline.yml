@@ -145,6 +145,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          clean: false
 
       - name: Configure Nginx reverse proxy (self-signed certificates, no domain - no money -\__(;-;)__/- )
         run: |
@@ -158,8 +160,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          clean: false
 
       - name: Run Selenium tests
         run: |
