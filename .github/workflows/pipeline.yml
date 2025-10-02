@@ -30,7 +30,7 @@ jobs:
 
       - name: Generate Ansible inventory from template
         run: |
-          inventory_template="$GITHUB_WORKSPACE/ansible/templates/inventory.template.ini"
+          inventory_template="$GITHUB_WORKSPACE/ansible/templates/inventory.example.ini"
           output_file="$GITHUB_WORKSPACE/ansible/inventory/inventory.ini"
           output_dir="$(dirname "$output_file")"
 
