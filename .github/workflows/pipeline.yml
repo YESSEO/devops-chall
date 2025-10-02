@@ -28,58 +28,65 @@ jobs:
         with:
           clean: false
 
-      - name: Generate Ansible Inventory from template 
+      - name: Generate Ansible inventory from template
         run: |
+          inventory_template="$GITHUB_WORKSPACE/ansible/templates/inventory.template.ini"
+          output_file="$GITHUB_WORKSPACE/ansible/inventory/inventory.ini"
+          output_dir="$(dirname "$output_file")"
 
-            # Init Inventory
-            inventory_template="ansible/templates/inventory.example.ini"
-            output_file="ansible/inventory/inventory.ini"
+          # Validate template exists
+          if [ ! -f "$inventory_template" ]; then
+            echo "[ERROR] Missing inventory template: $inventory_template"
+            exit 1
+          fi
 
-            if [ ! -f "$inventory_template" ]; then
-                    echo "[ERROR] Missing inventory template: $inventory_template"
-                    exit 1
-            fi
+          # Ensure output directory exists
+          if [ ! -d "$output_dir" ]; then
+            echo "[INFO] Creating missing directory: $output_dir"
+            mkdir -p "$output_dir"
+          fi
 
-            # check if inventory folder exists it, create
-            if [[ ! -d "$output_file" ]]; then
-              mkdir "ansible/inventory"
-            set -a 
-            envsubst < "$inventory_template" > "$output_file"
-            set +a 
-            echo "[INFO] Inventory generated at $output_file"
+          # Generate inventory file
+          set -a
+          if envsubst < "$inventory_template" > "$output_file"; then
+            echo "[INFO] Inventory successfully generated at: $output_file"
+          else
+            echo "[ERROR] Failed to generate inventory file."
+            exit 1
+          fi
+          set +a
+          
 
-
-      - name: Generate Ansible Variables from template
+      - name: Generate Ansible variables file
         run: |
-            vars_template="ansible/group_vars/all_template.yml"
-            vars_output="ansible/group_vars/all.yml"
+          vars_template="$GITHUB_WORKSPACE/ansible/group_vars/all_template.yml"
+          vars_output="$GITHUB_WORKSPACE/ansible/group_vars/all.yml"
 
-            if [ ! -f "$vars_template" ]; then
+          if [ ! -f "$vars_template" ]; then
             echo "[ERROR] Missing vars template: $vars_template"
             exit 1
-            fi
+          fi
 
-            set -a 
-            envsubst < "$vars_template" > "$vars_output"
-            set +a
-            echo "[INFO] Vars file generated at $vars_output"
-      
-      - name: Copy Ansible vaults and NGINX Proxy certificates from secrets
+          set -a 
+          envsubst < "$vars_template" > "$vars_output"
+          set +a
+          echo "[INFO] Vars file generated at $vars_output"
+
+      - name: Copy Ansible vaults and certificates from secrets
         run: |
-          # Define Cer folder and files
-          cert_folder="ansible/group_vars/secrets/certs"
+          # Define certificate folder and file
+          cert_folder="$GITHUB_WORKSPACE/ansible/group_vars/secrets/certs"
           cert_file="$cert_folder/test.crt"
 
           # Ensure the folder exists
-          if [[ ! -d "$cert_folder" ]; then
+          if [[ ! -d "$cert_folder" ]]; then
             echo "Directory $cert_folder does not exist. Creating it..."
             mkdir -p "$cert_folder"
           else
-            echo "Directory $cert_folder exists."
+            echo "Directory $cert_folder already exists."
           fi
 
-          # Write the key from Github actions
-                    # Write the certificate from GitHub secret
+          # Write the certificate from GitHub secret
           base64 --decode > "$cert_file" <<EOF
           ${{ secrets.SSL_CRT }}
           EOF
