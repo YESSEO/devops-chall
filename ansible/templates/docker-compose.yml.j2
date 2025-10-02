@@ -180,10 +180,6 @@ services:
       wazuh_default:
         aliases:
           - wazuh.dashboard
-    deploy:
-      replicas: 2
-      restart_policy:
-        condition: on-failure
     restart: always
     ports:
       - 127.0.0.1:8443:5601
