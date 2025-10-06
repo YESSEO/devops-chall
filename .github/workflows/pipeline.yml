@@ -32,12 +32,25 @@ jobs:
         run: |
           # Assuming only one folder matches wazuh-docker-*
 
-          folder=$(find "$GITHUB_WORKSPACE" -maxdepth 1 -type d -name 'wazuh-docker-*' | head -n 1)
-          export WAZUH_VERSION=$(basename "$folder" | sed 's/wazuh-docker-//') 
 
           inventory_template="$GITHUB_WORKSPACE/ansible/templates/inventory.example.ini"
           output_file="$GITHUB_WORKSPACE/ansible/inventory/inventory.ini"
           output_dir="$(dirname "$output_file")"
+
+          echo "[INFO] Waiting for wazuh-docker-* folder to appear..."
+          max_wait=30
+          wait_time=0
+          folder=""
+
+          while [ $wait_time -lt $max_wait ]; docker
+            folder=$(find "$GITHUB_WORKSPACE" -maxdepth 1 -type d -name 'wazuh-docker-*' | head -n 1)
+            if [ -n "$folder" ]; then
+              echo "[info] Found folder: $folder"
+              break
+            fi
+            sleep 1
+            wait_time=$((wait_time +2))
+          done
 
           # Validate template exists
           if [ ! -f "$inventory_template" ]; then
