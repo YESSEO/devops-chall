@@ -1,0 +1,6 @@
+tests/selenium/logger/__pycache__/loggerer.cpython-312.pyc
+build_test.sh
+build.sh
+clean_dockers.sh
+ansible/group_var/all.yml
+ansible/group_var/secrets/*
