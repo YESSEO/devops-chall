@@ -29,42 +29,49 @@ jobs:
           clean: false
 
       - name: Generate Ansible inventory from template
+        shell: bash
         run: |
-          # Assuming only one folder matches wazuh-docker-*
-          # Assuming only one folder matches wazuh-docker-*
-          folder=$(ls -d ./wazuh-docker-*/)
-          export WAZUH_VERSION=$(basename "$folder" | sed 's/wazuh-docker-//')
+          set -euo pipefail
 
-          echo "[+] WAZUH_VERSION found : $WAZUH_VERSION"
-          export > vars.txt
+          echo "[INFO] Current working directory: $(pwd)"
+          ls -la
 
+          # Wait a bit to ensure folder exists
+          folder=$(find . -maxdepth 1 -type d -name 'wazuh-docker-*' | head -n 1)
+          if [ -z "$folder" ]; then
+            echo "[ERROR] No wazuh-docker-* folder found."
+            exit 1
+          fi
+
+          export WAZUH_VERSION
+          WAZUH_VERSION=$(basename "$folder" | sed 's/wazuh-docker-//')
+          echo "[+] WAZUH_VERSION found: $WAZUH_VERSION"
+
+          # Persist for visibility (optional)
+          echo "WAZUH_VERSION=$WAZUH_VERSION" >> $GITHUB_ENV
 
           inventory_template="$GITHUB_WORKSPACE/ansible/templates/inventory.example.ini"
           output_file="$GITHUB_WORKSPACE/ansible/inventory/inventory.ini"
           output_dir="$(dirname "$output_file")"
 
-          # Validate template exists
           if [ ! -f "$inventory_template" ]; then
             echo "[ERROR] Missing inventory template: $inventory_template"
             exit 1
           fi
 
-          # Ensure output directory exists
-          if [ ! -d "$output_dir" ]; then
-            echo "[INFO] Creating missing directory: $output_dir"
-            mkdir -p "$output_dir"
-          fi
+          mkdir -p "$output_dir"
 
-          # Generate inventory file
-          set -a
-          if envsubst < "$inventory_template" > "$output_file"; then
-            echo "[INFO] Inventory successfully generated at: $output_file"
-          else
-            echo "[ERROR] Failed to generate inventory file."
-            exit 1
-          fi
-          set +a
-          
+          echo "[INFO] Generating inventory..."
+          env | grep WAZUH_VERSION || true  # debug line
+
+          # Substitute only known variables
+          envsubst '$WAZUH_VERSION $NFS_BASE $NFS_SERVER_IP $KEEPALIVED_VIRTUAL_IP $GITHUB_WORKSPACE' < "$inventory_template" > "$output_file"
+
+          echo "[INFO] Inventory generated at $output_file"
+          echo "-----------------"
+          cat "$output_file"
+          echo "-----------------"
+ 
 
       - name: Generate Ansible variables file
         run: |
