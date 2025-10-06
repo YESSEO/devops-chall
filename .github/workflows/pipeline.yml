@@ -43,12 +43,12 @@ jobs:
             exit 1
           fi
 
-          export WAZUH_VERSION
           WAZUH_VERSION=$(basename "$folder" | sed 's/wazuh-docker-//')
+          export WAZUH_VERSION
           echo "[+] WAZUH_VERSION found: $WAZUH_VERSION"
 
-          # Persist for visibility (optional)
-          echo "WAZUH_VERSION=$WAZUH_VERSION" >> $GITHUB_ENV
+          # Persist for future steps (optional)
+          echo "WAZUH_VERSION=$WAZUH_VERSION" >> "$GITHUB_ENV"
 
           inventory_template="$GITHUB_WORKSPACE/ansible/templates/inventory.example.ini"
           output_file="$GITHUB_WORKSPACE/ansible/inventory/inventory.ini"
@@ -62,16 +62,23 @@ jobs:
           mkdir -p "$output_dir"
 
           echo "[INFO] Generating inventory..."
-          env | grep WAZUH_VERSION || true  # debug line
+          env | grep -E 'WAZUH_VERSION|SWARM|ANSIBLE|NFS|KEEPALIVED' || true  # debug line
 
-          # Substitute only known variables
-          envsubst '$WAZUH_VERSION $NFS_BASE $NFS_SERVER_IP $KEEPALIVED_VIRTUAL_IP $GITHUB_WORKSPACE' < "$inventory_template" > "$output_file"
+          # Expand *all* exported environment variables
+          set -a
+          if envsubst < "$inventory_template" > "$output_file"; then
+            echo "[INFO] Inventory successfully generated at: $output_file"
+          else
+            echo "[ERROR] Failed to generate inventory file."
+            exit 1
+          fi
+          set +a
 
-          echo "[INFO] Inventory generated at $output_file"
           echo "-----------------"
           cat "$output_file"
           echo "-----------------"
- 
+                  
+    
 
       - name: Generate Ansible variables file
         run: |
