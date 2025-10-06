@@ -6,7 +6,7 @@ base_dir: "$GITHUB_WORKSPACE"
 wazuh_base: "{{ nfs_mount_point }}/wazuh"
 generate_certs_path: "/generate-indexer-certs.yml"
 nfsserverip: "$NFS_SERVER_IP"
-wazuh_version: "$WAZUH_VERSION"
+wazuh_version: $WAZUH_VERSION
 docker_wazuh_base: "/wazuh-docker-{{ wazuh_version }}/multi-node"
 wazuh_compose_file: "{{ nfs_mount_point }}{{ docker_wazuh_base }}/docker-compose.yml"
 indexers_cert_file: "{{ nfs_mount_point }}{{ docker_wazuh_base }}/generate-indexer-certs.yml"
