@@ -36,6 +36,7 @@ jobs:
           export WAZUH_VERSION=$(basename "$folder" | sed 's/wazuh-docker-//')
 
           echo "[+] WAZUH_VERSION found : $WAZUH_VERSION"
+          export > vars.txt
 
 
           inventory_template="$GITHUB_WORKSPACE/ansible/templates/inventory.example.ini"
