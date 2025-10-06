@@ -37,27 +37,36 @@ jobs:
           output_file="$GITHUB_WORKSPACE/ansible/inventory/inventory.ini"
           output_dir="$(dirname "$output_file")"
 
+          # Wait for wazuh-docker-* folder to appear (up to 30 seconds)
           echo "[INFO] Waiting for wazuh-docker-* folder to appear..."
           max_wait=30
           wait_time=0
           folder=""
 
-          while [ $wait_time -lt $max_wait ]; docker
+          while [ $wait_time -lt $max_wait ]; do
             folder=$(find "$GITHUB_WORKSPACE" -maxdepth 1 -type d -name 'wazuh-docker-*' | head -n 1)
             if [ -n "$folder" ]; then
-              echo "[info] Found folder: $folder"
+              echo "[INFO] Found folder: $folder"
               break
             fi
-            sleep 1
-            wait_time=$((wait_time +2))
+            sleep 2
+            wait_time=$((wait_time + 2))
           done
 
+          if [ -z "$folder" ]; then
+            echo "[ERROR] wazuh-docker-* folder not found after ${max_wait}s. Exiting."
+            exit 1
+          fi
+
+          # Extract version
           export WAZUH_VERSION=$(basename "$folder" | sed 's/wazuh-docker-//')
 
-          if [-z "$WAZUH_VERSION"]; then
+          if [ -z "$WAZUH_VERSION" ]; then
             echo "[ERROR] Could not determine WAZUH_VERSION from folder name."
-            exit -1
+            exit 1
           fi
+
+          echo "[INFO] WAZUH_VERSION detected: $WAZUH_VERSION" 
 
           # Validate template exists
           if [ ! -f "$inventory_template" ]; then
