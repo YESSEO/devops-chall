@@ -30,6 +30,11 @@ jobs:
 
       - name: Generate Ansible inventory from template
         run: |
+          # Assuming only one folder matches wazuh-docker-*
+
+          folder=$(ls -d "$GITHUB_WORKSPACE"/wazuh-docker-*/)
+          export WAZUH_VERSION=$(basename "$folder" | sed 's/wazuh-docker-//')
+
           inventory_template="$GITHUB_WORKSPACE/ansible/templates/inventory.example.ini"
           output_file="$GITHUB_WORKSPACE/ansible/inventory/inventory.ini"
           output_dir="$(dirname "$output_file")"
