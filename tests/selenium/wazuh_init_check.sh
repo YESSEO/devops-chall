@@ -151,4 +151,5 @@ check_dashboard
 wait_for_port "$PORT2"
 check_api
 
-echo "[SUCCESS] All checks passed successfully."
+wazuh_wazuh_masterecho "[SUCCESS] All checks passed successfully."
+
