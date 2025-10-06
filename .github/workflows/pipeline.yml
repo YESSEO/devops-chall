@@ -52,6 +52,13 @@ jobs:
             wait_time=$((wait_time +2))
           done
 
+          export WAZUH_VERSION=$(basename "$folder" | sed 's/wazuh-docker-//')
+
+          if [-z "$WAZUH_VERSION"]; then
+            echo "[ERROR] Could not determine WAZUH_VERSION from folder name."
+            exit -1
+          fi
+
           # Validate template exists
           if [ ! -f "$inventory_template" ]; then
             echo "[ERROR] Missing inventory template: $inventory_template"
