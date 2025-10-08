@@ -16,7 +16,7 @@ The pipeline runs automatically on:
 
 ## CI/CD Pipeline Steps
 
-1. **Build Container Images**
+### 1. **Build Container Images**
 - Docker images are built for the application [docker-images.sh ](https://github.com/YESSEO/devops-chall/blob/main/.github/workflows/pr_wazuh_build.yml#L13)
 ```yaml
   build-docker-images:
@@ -43,7 +43,7 @@ The pipeline runs automatically on:
 ```
 
 
-2. Scan with **Trivy** (fail on Critical/High findings)
+### 2. Scan with **Trivy** (fail on Critical/High findings)
 - Trivy vulnerability scan is performed immediately after a successful Docker image build, [trivy-scan](https://github.com/YESSEO/devops-chall/blob/main/.github/workflows/pr_wazuh_build.ymll#L50)
 ```yaml
   trivy-scan:
@@ -73,7 +73,7 @@ The pipeline runs automatically on:
           ...
 ```
 
-3. **Local Test Deployment**
+### 3. **Local Test Deployment**
  -  After building Docker images and passing the Trivy scan, the pipeline **deploys a test environment locally** [deploy-test](https://github.com/YESSEO/devops-chall/blob/main/.github/workflows/pr_wazuh_build.yml#L90)
 ```yaml
   deploy-test:
@@ -98,7 +98,7 @@ The pipeline runs automatically on:
     3. Starts the full **multi-node Wazuh test environment** in detached mode with Docker Compose.
 - This ensures the environment is fully set up before executing automated tests.
 
-4. Automated Testing
+### 4. Automated Testing
 - Before running Selenium , the pipeline ensures the **Wazuh dashboard is fully up and responsive**.
 - This is handeled by the **wait-dashboard-api** job [deploy-test](https://github.com/YESSEO/devops-chall/blob/main/.github/workflows/pr_wazuh_build.yml#L106) , which executes the script [wazuh_ini_check.sh](https://github.com/YESSEO/devops-chall/blob/main/tests/selenium/wazuh_init_check.sh)
 ```sh
