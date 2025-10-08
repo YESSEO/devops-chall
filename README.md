@@ -178,44 +178,43 @@ The pipeline automatically builds, scans, tests, and deploys containerized appli
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
     ...
-
-    - The Required environment variables are passed from Github Actions secrets and workflow variables
     ```
 
-        ```python
-        """ Selenium Script used for verifying Wazuh Dashboard & Wazuh API health Check"""
+    - The Required environment variables are passed from Github Actions secrets and workflow variables
+    ```python
+    """ Selenium Script used for verifying Wazuh Dashboard & Wazuh API health Check"""
 
-        from os import getenv, path
-        from time import sleep
+    from os import getenv, path
+    from time import sleep
 
-        import sys
-        import json
-        import requests
-        import urllib3
+    import sys
+    import json
+    import requests
+    import urllib3
 
-        from selenium import webdriver
-        from selenium.webdriver.chrome.service import Service
-        from selenium.webdriver.chrome.options import Options
-        from selenium.webdriver.common.by import By
-        from selenium.webdriver.support.ui import WebDriverWait
-        from selenium.webdriver.support import expected_conditions as EC
-        from selenium.common.exceptions import TimeoutException
+    from selenium import webdriver
+    from selenium.webdriver.chrome.service import Service
+    from selenium.webdriver.chrome.options import Options
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+    from selenium.common.exceptions import TimeoutException
 
-        # Logging proccess
-        try :
+    # Logging proccess
+    try :
 
-            sys.path.append(path.join(path.dirname(__file__), "logger"))
-            from loggerer import SimpleLogger
+        sys.path.append(path.join(path.dirname(__file__), "logger"))
+        from loggerer import SimpleLogger
 
-        except (ModuleNotFoundError, NameError) as e:
-            print("[ERROR] module is not found or failed to import")
-            sys.exit(1)
+    except (ModuleNotFoundError, NameError) as e:
+        print("[ERROR] module is not found or failed to import")
+        sys.exit(1)
 
-        debug = getenv("DEBUG")
+    debug = getenv("DEBUG")
 
 
-        class SeleniumTest:
-            """Selenium & API some Test for Wazuh Dashboard, API health Check"""""" Selenium Script used for verifying Wazuh Dashboard & Wazuh API health Check"""
-        ...
+    class SeleniumTest:
+        """Selenium & API some Test for Wazuh Dashboard, API health Check"""""" Selenium Script used for verifying Wazuh Dashboard & Wazuh API health Check"""
+    ...
 
-        ```
+    ```
