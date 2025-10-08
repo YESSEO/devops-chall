@@ -15,7 +15,7 @@ The pipeline automatically builds, scans, tests, and deploys containerized appli
 	- **Pull requests** to `main` from `pre-prod` branch
 	- **Push events** to `main`
 
-## CI/CD Pipeline Steps
+## CI/CD Pipeline Steps [PR]
 
 ### 1. **Build Container Images**
 
@@ -110,40 +110,40 @@ The pipeline automatically builds, scans, tests, and deploys containerized appli
 * Before running Selenium , the pipeline ensures the **Wazuh dashboard & API is fully up and responsive**.
 * This is handeled by the **wait-dashboard-api** job [deploy-test](https://github.com/YESSEO/devops-chall/blob/main/.github/workflows/pr_wazuh_build.yml#L106) , which executes the script [wazuh_ini_check.sh](https://github.com/YESSEO/devops-chall/blob/main/tests/selenium/wazuh_init_check.sh)
 
-```sh
-#!/bin/bash
+    ```sh
+    #!/bin/bash
 
-# =========================
-# Default values
-# =========================
-HOST="localhost"
-PORT1=443
-PORT2=55000
-MAX_RETRIES=100
-DELAY=20
+    # =========================
+    # Default values
+    # =========================
+    HOST="localhost"
+    PORT1=443
+    PORT2=55000
+    MAX_RETRIES=100
+    DELAY=20
 
-# =========================
-# Help function
-# =========================
-show_help() {
-    cat << EOF
-Usage: $0 [OPTIONS]
+    # =========================
+    # Help function
+    # =========================
+    show_help() {
+        cat << EOF
+    Usage: $0 [OPTIONS]
 
-Options:
-  --host HOST            Hostname or IP to check (default: localhost)
-  --port1 PORT           Dashboard port (default: 443)
-  --port2 PORT           API port (default: 55000)
-  --max-retries NUM      Max number of retries per check (default: 100)
-  --delay SECONDS        Delay between retries (default: 20)
-  -h, --help             Show this help message and exit
+    Options:
+    --host HOST            Hostname or IP to check (default: localhost)
+    --port1 PORT           Dashboard port (default: 443)
+    --port2 PORT           API port (default: 55000)
+    --max-retries NUM      Max number of retries per check (default: 100)
+    --delay SECONDS        Delay between retries (default: 20)
+    -h, --help             Show this help message and exit
 
-Example:
-  $0 --host 127.0.0.1 --port1 443 --port2 55000 --max-retries 50 --delay 10
-EOF
-    exit 0
-}
-...
-```
+    Example:
+    $0 --host 127.0.0.1 --port1 443 --port2 55000 --max-retries 50 --delay 10
+    EOF
+        exit 0
+    }
+    ...
+    ```
 
 * After deploying the test environment, the pipeline runs a **Python Selenium** script to verify Wazuh functionality.
     - the [local_test.sh](https://github.com/YESSEO/devops-chall/blob/main/tests/selenium/local_test.sh) sets up the pyenv dependencies and the Pyhon scripts requirements
