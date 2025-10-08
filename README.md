@@ -35,8 +35,7 @@ The pipeline runs automatically on:
       - name: Detect submitted wazuh-docker folder
         id: detect
         run: |
-		<SNIP> ....
-
+            ...
       - name: Run build script
         working-directory: ${{ steps.detect.outputs.wazuh_base }}
         run: |
@@ -71,7 +70,7 @@ The pipeline runs automatically on:
           --ignorefile "$GITHUB_WORKSPACE"/trivy/.trivyignore \
           --severity CRITICAL,HIGH --exit-code 1\
           --format json --output "$GITHUB_WORKSPACE"/reports/trivy/trivy-wazuh-dashboard.json
-<SNIP> ...
+          ...
 ```
 
 3. **Local Test Deployment**
@@ -134,5 +133,5 @@ Example:
 EOF
     exit 0
 }
-<SNIP> ...
+...
 ```
