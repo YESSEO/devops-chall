@@ -191,3 +191,18 @@ jobs:
         run: |
           ANSIBLE_VAULT_PASSWORD_FILE=<(echo ${{ secrets.ANSIBLE_VAULT_SECRET }}) ansible-playbook -i ansible/inventory/inventory.ini \
             ansible/playbooks/selenium.yaml
+
+  ansible_wazuh_rules:
+    runs-on: self-hosted
+    environment: prod
+    needs: ansible_selenium_test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: Run Selenium tests
+        run: |
+          ANSIBLE_VAULT_PASSWORD_FILE=<(echo ${{ secrets.ANSIBLE_VAULT_SECRET }}) ansible-playbook -i ansible/inventory/inventory.ini \
+            ansible/playbooks/wazuh_rules.yaml
