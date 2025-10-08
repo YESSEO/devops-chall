@@ -8,6 +8,14 @@ services:
   wazuh_master:
     image: wazuh/wazuh-manager:{{ wazuh_version }}
     hostname: wazuh.master
+    deploy:
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 10s
     networks:
       wazuh_default:
         aliases:
@@ -53,6 +61,14 @@ services:
 
   wazuh_worker:
     hostname: wazuh.worker
+    deploy:
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 10s
     networks:
       wazuh_default:
         aliases:
@@ -94,6 +110,14 @@ services:
   wazuh1_indexer:
     image: wazuh/wazuh-indexer:{{ wazuh_version }}
     hostname: wazuh1.indexer
+    deploy:
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 10s
     networks:
       wazuh_default:
         aliases:
@@ -124,6 +148,14 @@ services:
   wazuh2_indexer:
     image: wazuh/wazuh-indexer:{{ wazuh_version }}
     hostname: wazuh2.indexer
+    deploy:
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 10s
     networks:
       wazuh_default:
         aliases:
@@ -150,6 +182,14 @@ services:
   wazuh3_indexer:
     image: wazuh/wazuh-indexer:{{ wazuh_version }}
     hostname: wazuh3.indexer
+    deploy:
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 10s
     networks:
       wazuh_default:
         aliases:
@@ -176,6 +216,14 @@ services:
   wazuh_dashboard:
     image: wazuh/wazuh-dashboard:{{ wazuh_version }}
     hostname: wazuh_dashboard
+    deploy:
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 10s
     networks:
       wazuh_default:
         aliases:
@@ -208,6 +256,14 @@ services:
   nginx:
     image: nginx:stable
     hostname: nginx
+    deploy:
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 10s
     networks:
       - wazuh_default
     restart: always
