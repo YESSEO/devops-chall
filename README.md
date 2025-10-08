@@ -179,8 +179,8 @@ The pipeline automatically builds, scans, tests, and deploys containerized appli
     eval "$(pyenv virtualenv-init -)"
     ...
 
+    - The Required environment variables are passed from Github Actions secrets and workflow variables
     ```
-        - The Required environment variables are passed from Github Actions secrets and workflow variables
 
         ```python
         """ Selenium Script used for verifying Wazuh Dashboard & Wazuh API health Check"""
