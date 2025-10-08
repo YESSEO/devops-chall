@@ -1,0 +1,28 @@
+- name: Authenticate to Wazuh API and get token
+  uri:
+    url: "https://192.168.48.129:55000/security/user/authenticate?raw=true"
+    method: POST
+    user: "{{ apiusername }}"
+    password: "{{ apipassword }}"
+    force_basic_auth: yes
+    return_content: yes
+    validate_certs: no
+  register: wazuh_auth
+
+- name: Set token fact
+  set_fact:
+    wazuh_token: "{{ wazuh_auth.content | trim }}"
+
+- name: Reload Wazuh cluster (reload rules)
+  uri:
+    url: "https://127.0.0.1:55000/cluster/analysisd/reload"
+    method: PUT
+    headers:
+      Authorization: "Bearer {{ wazuh_token }}"
+    return_content: yes
+    validate_certs: no
+  register: wazuh_reload
+
+- name: Show reload result
+  debug:
+    var: wazuh_reload.content
