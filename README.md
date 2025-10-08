@@ -146,76 +146,76 @@ EOF
 ```
 
 * After deploying the test environment, the pipeline runs a **Python Selenium** script to verify Wazuh functionality.
-- the [local_test.sh](https://github.com/YESSEO/devops-chall/blob/main/tests/selenium/local_test.sh) sets up the pyenv dependencies and the Pyhon scripts requirements
-before it ran inside a **Python virtual environment**
-```sh
-#!/bin/bash
-set -euo pipefail
+    - the [local_test.sh](https://github.com/YESSEO/devops-chall/blob/main/tests/selenium/local_test.sh) sets up the pyenv dependencies and the Pyhon scripts requirements
+    before it ran inside a **Python virtual environment**
+    ```sh
+    #!/bin/bash
+    set -euo pipefail
 
-VENV_NAME="health_check"
-REQUIREMENTS_FILE="requirements.txt"
-SCRIPT_TO_RUN="pipeline_ui_tests.py"  # change this to your script path
-PYENV_ROOT="${PYENV_ROOT:-$HOME/.pyenv}"
+    VENV_NAME="health_check"
+    REQUIREMENTS_FILE="requirements.txt"
+    SCRIPT_TO_RUN="pipeline_ui_tests.py"  # change this to your script path
+    PYENV_ROOT="${PYENV_ROOT:-$HOME/.pyenv}"
 
-# -----------------------------
-# Setup pyenv
-# -----------------------------
-export PATH="$PYENV_ROOT/bin:$PATH"
+    # -----------------------------
+    # Setup pyenv
+    # -----------------------------
+    export PATH="$PYENV_ROOT/bin:$PATH"
 
-if ! command -v pyenv >/dev/null 2>&1; then
-    echo "[ERROR] pyenv not found in $PYENV_ROOT"
-    echo "[INFO] Install pyenv first: https://github.com/pyenv/pyenv#installation"
-    exit 1
-fi
+    if ! command -v pyenv >/dev/null 2>&1; then
+        echo "[ERROR] pyenv not found in $PYENV_ROOT"
+        echo "[INFO] Install pyenv first: https://github.com/pyenv/pyenv#installation"
+        exit 1
+    fi
 
-# Ensure pyenv-virtualenv plugin is present
-if [ ! -d "$PYENV_ROOT/plugins/pyenv-virtualenv" ]; then
-    echo "[INFO] pyenv-virtualenv plugin not found, installing..."
-    git clone https://github.com/pyenv/pyenv-virtualenv.git \
-        "$PYENV_ROOT/plugins/pyenv-virtualenv"
-fi
+    # Ensure pyenv-virtualenv plugin is present
+    if [ ! -d "$PYENV_ROOT/plugins/pyenv-virtualenv" ]; then
+        echo "[INFO] pyenv-virtualenv plugin not found, installing..."
+        git clone https://github.com/pyenv/pyenv-virtualenv.git \
+            "$PYENV_ROOT/plugins/pyenv-virtualenv"
+    fi
 
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-...
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+    ...
 
-```
-- The Required environment variables are passed from Github Actions secrets and workflow variables
+    ```
+        - The Required environment variables are passed from Github Actions secrets and workflow variables
 
-```py
-""" Selenium Script used for verifying Wazuh Dashboard & Wazuh API health Check"""
+        ```py
+        """ Selenium Script used for verifying Wazuh Dashboard & Wazuh API health Check"""
 
-from os import getenv, path
-from time import sleep
+        from os import getenv, path
+        from time import sleep
 
-import sys
-import json
-import requests
-import urllib3
+        import sys
+        import json
+        import requests
+        import urllib3
 
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
+        from selenium import webdriver
+        from selenium.webdriver.chrome.service import Service
+        from selenium.webdriver.chrome.options import Options
+        from selenium.webdriver.common.by import By
+        from selenium.webdriver.support.ui import WebDriverWait
+        from selenium.webdriver.support import expected_conditions as EC
+        from selenium.common.exceptions import TimeoutException
 
-# Logging proccess
-try :
+        # Logging proccess
+        try :
 
-    sys.path.append(path.join(path.dirname(__file__), "logger"))
-    from loggerer import SimpleLogger
+            sys.path.append(path.join(path.dirname(__file__), "logger"))
+            from loggerer import SimpleLogger
 
-except (ModuleNotFoundError, NameError) as e:
-    print("[ERROR] module is not found or failed to import")
-    sys.exit(1)
+        except (ModuleNotFoundError, NameError) as e:
+            print("[ERROR] module is not found or failed to import")
+            sys.exit(1)
 
-debug = getenv("DEBUG")
+        debug = getenv("DEBUG")
 
 
-class SeleniumTest:
-    """Selenium & API some Test for Wazuh Dashboard, API health Check"""""" Selenium Script used for verifying Wazuh Dashboard & Wazuh API health Check"""
-...
+        class SeleniumTest:
+            """Selenium & API some Test for Wazuh Dashboard, API health Check"""""" Selenium Script used for verifying Wazuh Dashboard & Wazuh API health Check"""
+        ...
 
-```
+        ```
