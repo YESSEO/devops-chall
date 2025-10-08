@@ -182,7 +182,7 @@ The pipeline automatically builds, scans, tests, and deploys containerized appli
     ```
         - The Required environment variables are passed from Github Actions secrets and workflow variables
 
-        ```py
+        ```python
         """ Selenium Script used for verifying Wazuh Dashboard & Wazuh API health Check"""
 
         from os import getenv, path
