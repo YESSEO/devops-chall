@@ -181,6 +181,7 @@ The pipeline automatically builds, scans, tests, and deploys containerized appli
     ```
 
     - The Required environment variables are passed from Github Actions secrets and workflow variables
+
     ```python
     """ Selenium Script used for verifying Wazuh Dashboard & Wazuh API health Check"""
 
@@ -218,3 +219,6 @@ The pipeline automatically builds, scans, tests, and deploys containerized appli
     ...
 
     ```
+
+## CI/CD Pipeline Steps [main]
+after a succussfull merge to main
