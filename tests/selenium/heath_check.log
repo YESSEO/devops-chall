@@ -1,0 +1,26 @@
+2025-10-01 12:18:45,404 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Dashboard, Title Found
+2025-10-01 12:18:50,848 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Form Elements Found
+2025-10-01 12:18:50,848 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Dashboard Drop Down Menu Found
+2025-10-01 12:18:51,174 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - DEBUG - TOKEN REQUEST: title Unauthorized, reason: Invalid credentials
+2025-10-01 12:22:20,164 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Dashboard, Title Found
+2025-10-01 12:22:26,574 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Form Elements Found
+2025-10-01 12:22:26,574 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Dashboard Drop Down Menu Found
+2025-10-01 12:22:27,367 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO -  API TOKEN Found
+2025-10-01 12:22:31,879 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - api_version_request: version: 4.13.1 hostname: wazuh.master 
+2025-10-01 12:22:31,881 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Selenium Test Gracefulyl PASSED
+2025-10-01 12:22:31,881 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - -----------------------
+2025-10-01 12:24:31,139 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - ERROR - Title not found
+2025-10-01 12:33:19,904 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Dashboard, Title Found
+2025-10-01 12:33:26,479 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Form Elements Found
+2025-10-01 12:33:26,479 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Dashboard Drop Down Menu Found
+2025-10-01 12:33:27,103 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO -  API TOKEN Found
+2025-10-01 12:33:31,154 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - api_version_request: version: 4.13.1 hostname: wazuh.master 
+2025-10-01 12:33:31,158 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Selenium Test Gracefulyl PASSED
+2025-10-01 12:33:31,159 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - -----------------------
+2025-10-01 12:35:53,438 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Dashboard, Title Found
+2025-10-01 12:35:58,689 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Form Elements Found
+2025-10-01 12:35:58,690 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Dashboard Drop Down Menu Found
+2025-10-01 12:35:59,546 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO -  API TOKEN Found
+2025-10-01 12:36:03,553 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - api_version_request: version: 4.13.1 hostname: wazuh.master 
+2025-10-01 12:36:03,555 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - Selenium Test Gracefulyl PASSED
+2025-10-01 12:36:03,556 - /home/ceasar/fun/build/cirescyber/soc/lab/tests/selenium/pipeline_ui_tests.py - INFO - -----------------------
