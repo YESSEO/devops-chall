@@ -1,7 +1,4 @@
 - name: Copy wazuh-docker folder to NFS share
   ansible.legacy.copy:
     src: "{{base_dir}}/rules"
-    dest: "{{ nfs_mount_point }}/wazuh/master/etc/"
-    owner: root
-    group: root
-    mode: '0644'
+    dest: "/mnt/swrmd_nfs/wazuh/master/etc/"
