@@ -1,0 +1,5 @@
+- name: Execute build-images.sh
+  ansible.builtin.shell: | 
+    bash ./build-docker-images/build-images.sh
+  args:
+    chdir: "{{ nfs_mount_point }}/wazuh-docker-{{ wazuh_version }}"

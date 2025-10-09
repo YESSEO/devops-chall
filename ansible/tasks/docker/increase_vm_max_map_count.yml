@@ -1,0 +1,11 @@
+- name: Persist vm.max_map_count
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.conf
+    line: "vm.max_map_count=262144"
+    state: present
+  become: true
+
+- name: Reload sysctl
+  ansible.builtin.command: sysctl -p
+  become: true
+  changed_when: false

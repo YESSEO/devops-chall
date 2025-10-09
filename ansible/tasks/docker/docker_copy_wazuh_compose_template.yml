@@ -1,0 +1,5 @@
+- name: Generate wazuh compose from template
+  ansible.builtin.template:
+    src: "{{ base_dir }}/ansible/templates/docker-compose.yml.j2"
+    dest: "{{ nfs_mount_point }}/{{ docker_wazuh_base }}/docker-compose.yml"
+    mode: '0644'

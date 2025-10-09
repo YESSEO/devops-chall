@@ -1,0 +1,47 @@
+- name: Installing pyenv dependencies
+  ansible.builtin.apt:
+    name:
+      - make
+      - build-essential
+      - libssl-dev
+      - zlib1g-dev
+      - libbz2-dev
+      - libreadline-dev
+      - libsqlite3-dev
+      - llvm
+      - libncursesw5-dev
+      - xz-utils
+      - tk-dev
+      - libxml2-dev
+      - libxmlsec1-dev
+      - libffi-dev
+      - liblzma-dev
+      - python3-pip
+      - python3-venv
+      - python3-full
+      - chromium-chromedriver
+    state: present
+    update_cache: true
+  become: true
+
+- name: Check if pyenv is already installed
+  ansible.builtin.stat:
+    path: /root/.pyenv
+  register: pyenv_dir
+
+- name: Download pyenv installer script
+  ansible.builtin.get_url:
+    url: https://pyenv.run
+    dest: /tmp/pyenv-installer.sh
+    mode: '0755'
+  when: not pyenv_dir.stat.exists
+  become: true
+
+- name: Install pyenv via official installer
+  ansible.builtin.shell: |
+    bash /tmp/pyenv-installer.sh
+  args:
+    executable: /bin/bash
+  when: not pyenv_dir.stat.exists
+  changed_when: not pyenv_dir.stat.exists
+  become: true

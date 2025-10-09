@@ -1,0 +1,15 @@
+- name: Installing Nginx
+  hosts: managers
+  become: true
+  vars_files:
+    - ../group_vars/secrets/vault.yml
+    - ../group_vars/all.yml
+  tasks:
+    - name: Install packages & Run services
+      ansible.builtin.include_tasks: ../tasks/nginx/install_nginx.yml
+
+    - name: Copy template
+      ansible.builtin.include_tasks: ../tasks/nginx/proxy_config.yml
+
+    - name: Reload service & copy secrets
+      ansible.builtin.include_tasks: ../tasks/nginx/proxy_secrets.yml

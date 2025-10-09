@@ -1,0 +1,14 @@
+vrrp_instance VI_1 {
+    state {{ 'MASTER' if inventory_hostname == groups['managers'][0] else 'BACKUP' }}
+    interface {{ ansible_default_ipv4.interface }}
+    virtual_router_id 51
+    priority {{ 100 if inventory_hostname == groups['managers'][0] else 90 }}
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass {{ keepalived_vrrp_password }}
+    }
+    virtual_ipaddress {
+        {{ virtual_ip }}
+    }
+}

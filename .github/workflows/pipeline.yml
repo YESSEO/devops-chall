@@ -1,0 +1,208 @@
+name: Pipeline
+
+on:
+  pull_request:
+    types: [closed]
+  
+  workflow_dispatch:
+
+jobs:
+
+  ansible_dependencies:
+    if: github.event.pull_request.merged == true
+    runs-on: self-hosted
+    environment: prod
+    env:
+      ANSIBLE_USER: ${{ vars.ANSIBLE_USER }}
+      KEEPALIVED_VIRTUAL_IP: ${{ vars.KEEPALIVED_VIRTUAL_IP }}
+      NFS_BASE: ${{ vars.NFS_BASE }}
+      NFS_SERVER_HOSTNAME: ${{ vars.NFS_SERVER_HOSTNAME }}
+      NFS_SERVER_IP: ${{ vars.NFS_SERVER_IP }}
+      SWARM_MANAGER_HOSTNAME: ${{ vars.SWARM_MANAGER_HOSTNAME }}
+      SWARM_MANAGER_IP: ${{ vars.SWARM_MANAGER_IP }}
+      SWARM_WORKER_HOSTNAME: ${{ vars.SWARM_WORKER_HOSTNAME }}
+      SWARM_WORKER_IP: ${{ vars.SWARM_WORKER_IP }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: Generate Ansible inventory from template
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "[INFO] Current working directory: $(pwd)"
+          ls -la
+
+          # Wait a bit to ensure folder exists
+          folder=$(find . -maxdepth 1 -type d -name 'wazuh-docker-*' | head -n 1)
+          if [ -z "$folder" ]; then
+            echo "[ERROR] No wazuh-docker-* folder found."
+            exit 1
+          fi
+
+          WAZUH_VERSION=$(basename "$folder" | sed 's/wazuh-docker-//')
+          export WAZUH_VERSION
+          echo "[+] WAZUH_VERSION found: $WAZUH_VERSION"
+
+          # Persist for future steps (optional)
+          echo "WAZUH_VERSION=$WAZUH_VERSION" >> "$GITHUB_ENV"
+
+          inventory_template="$GITHUB_WORKSPACE/ansible/templates/inventory.example.ini"
+          output_file="$GITHUB_WORKSPACE/ansible/inventory/inventory.ini"
+          output_dir="$(dirname "$output_file")"
+
+          if [ ! -f "$inventory_template" ]; then
+            echo "[ERROR] Missing inventory template: $inventory_template"
+            exit 1
+          fi
+
+          mkdir -p "$output_dir"
+
+          echo "[INFO] Generating inventory..."
+          env | grep -E 'WAZUH_VERSION|SWARM|ANSIBLE|NFS|KEEPALIVED' || true  # debug line
+
+          # Expand *all* exported environment variables
+          set -a
+          if envsubst < "$inventory_template" > "$output_file"; then
+            echo "[INFO] Inventory successfully generated at: $output_file"
+          else
+            echo "[ERROR] Failed to generate inventory file."
+            exit 1
+          fi
+          set +a
+
+          echo "-----------------"
+          cat "$output_file"
+          echo "-----------------"
+                  
+    
+
+      - name: Generate Ansible variables file
+        run: |
+          vars_template="$GITHUB_WORKSPACE/ansible/group_vars/all_template.yml"
+          vars_output="$GITHUB_WORKSPACE/ansible/group_vars/all.yml"
+
+          if [ ! -f "$vars_template" ]; then
+            echo "[ERROR] Missing vars template: $vars_template"
+            exit 1
+          fi
+
+          set -a 
+          envsubst < "$vars_template" > "$vars_output"
+          set +a
+          echo "[INFO] Vars file generated at $vars_output"
+
+      - name: Copy Ansible vaults and certificates from secrets
+        run: |
+          # Define certificate folder and file
+          cert_folder="$GITHUB_WORKSPACE/ansible/group_vars/secrets/certs"
+          cert_file="$cert_folder/test.crt"
+
+          # Ensure the folder exists
+          if [[ ! -d "$cert_folder" ]]; then
+            echo "Directory $cert_folder does not exist. Creating it..."
+            mkdir -p "$cert_folder"
+          else
+            echo "Directory $cert_folder already exists."
+          fi
+
+          # Write the certificate from GitHub secret
+          base64 --decode > "$cert_file" <<EOF
+          ${{ secrets.SSL_CRT }}
+          EOF
+
+          chmod 600 "$cert_file"
+          echo "Certificate written to $cert_file"
+
+          # Write the key from GitHub secret
+          key_file="$cert_folder/test.key"
+          base64 --decode > "$key_file" <<EOF
+          ${{ secrets.SSL_KEY }}
+          EOF
+          echo "Key written to $key_file"
+          
+          # Write the vault from GitHub secret
+          secret_vault_file="$GITHUB_WORKSPACE/ansible/group_vars/secrets/vault.yml"
+          base64 --decode > "$secret_vault_file" <<EOF
+          ${{ secrets.ANSIBLE_VAULT }}
+          EOF
+      
+  ansible_docker_nfs_vvrp_dependencies:
+    runs-on: self-hosted
+    environment: prod
+    needs: ansible_dependencies
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: false # keep existing files
+
+      - name: Initialize Docker Swarm, configure NFS share, and set up VRRP for HA
+        run: |
+          ANSIBLE_VAULT_PASSWORD_FILE=<(echo ${{ secrets.ANSIBLE_VAULT_SECRET }}) ansible-playbook -i ansible/inventory/inventory.ini \
+            ansible/playbooks/docker_nfs_alived.yaml
+
+  ansible_deploy_stack:
+    runs-on: self-hosted
+    environment: prod
+    needs: ansible_docker_nfs_vvrp_dependencies
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: Deploy Wazuh multi-node stack with replication
+        run: |
+          ANSIBLE_VAULT_PASSWORD_FILE=<(echo ${{ secrets.ANSIBLE_VAULT_SECRET }}) ansible-playbook -i ansible/inventory/inventory.ini \
+            ansible/playbooks/stack_deploy.yaml
+
+
+  ansible_deploy_nginx:
+    runs-on: self-hosted
+    environment: prod
+    needs: ansible_deploy_stack
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: Configure Nginx reverse proxy (self-signed certificates, no domain - no money -\__(;-;)__/- )
+        run: |
+          ANSIBLE_VAULT_PASSWORD_FILE=<(echo ${{ secrets.ANSIBLE_VAULT_SECRET }}) ansible-playbook -i ansible/inventory/inventory.ini \
+            ansible/playbooks/nginx_reverse_proxy.yaml
+
+  ansible_selenium_test:
+    runs-on: self-hosted
+    environment: prod
+    needs: ansible_deploy_nginx 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: Run Selenium tests
+        run: |
+          ANSIBLE_VAULT_PASSWORD_FILE=<(echo ${{ secrets.ANSIBLE_VAULT_SECRET }}) ansible-playbook -i ansible/inventory/inventory.ini \
+            ansible/playbooks/selenium.yaml
+
+  ansible_wazuh_rules:
+    runs-on: self-hosted
+    environment: prod
+    needs: ansible_selenium_test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: Run Selenium tests
+        run: |
+          ANSIBLE_VAULT_PASSWORD_FILE=<(echo ${{ secrets.ANSIBLE_VAULT_SECRET }}) ansible-playbook -i ansible/inventory/inventory.ini \
+            ansible/playbooks/wazuh_rules.yaml

@@ -1,0 +1,42 @@
+# Building images
+- name: Building Verified Docker images
+  hosts: managers
+  become: true
+  vars_files:
+    - ../group_vars/secrets/vault.yml
+    - ../group_vars/all.yml
+  tasks:
+    - name: Building the docker images
+      ansible.builtin.include_tasks: ../tasks/docker/docker_image_build.yml
+
+- name: Generate docker-compose.yml from template
+  hosts: managers
+  become: true
+  vars_files:
+    - ../group_vars/secrets/vault.yml
+    - ../group_vars/all.yml
+  tasks:
+    - name: Generating docker-compose from template
+      ansible.builtin.include_tasks: ../tasks/docker/docker_copy_wazuh_compose_template.yml
+
+
+# Generate the Indexers certs
+- name: Run indexer certificate generator container
+  hosts: managers
+  become: true
+  vars_files:
+    - ../group_vars/all.yml
+  tasks:
+    - name: Generating Certfs
+      ansible.builtin.include_tasks: ../tasks/docker/generate_certs.yml
+
+
+# Deploy Wazuh Docker stack
+- name: Deploy Wazuh Docker stack
+  hosts: managers
+  become: true
+  vars_files:
+    - ../group_vars/all.yml
+  tasks:
+    - name: Deploying Wazuh multi node
+      ansible.builtin.include_tasks: ../tasks/docker/deploy_wazuh_stack.yml

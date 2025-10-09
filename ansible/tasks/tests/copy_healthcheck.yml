@@ -1,0 +1,7 @@
+- name: Copy selenium test to /opt/health_check
+  ansible.builtin.copy:
+    src: "{{ base_dir }}/tests/selenium/"
+    dest: /opt/health_check
+    owner: root
+    group: root
+    mode: "0700"

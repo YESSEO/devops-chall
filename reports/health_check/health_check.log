@@ -1,7 +1,0 @@
-2025-09-30 13:04:42,905 - /opt/health_check/pipeline_ui_tests.py - INFO - Dashboard, Title Found
-2025-09-30 13:04:49,100 - /opt/health_check/pipeline_ui_tests.py - INFO - Form Elements Found
-2025-09-30 13:04:49,100 - /opt/health_check/pipeline_ui_tests.py - INFO - Dashboard Drop Down Menu Found
-2025-09-30 13:04:52,412 - /opt/health_check/pipeline_ui_tests.py - INFO -  API TOKEN Found
-2025-09-30 13:05:01,703 - /opt/health_check/pipeline_ui_tests.py - INFO - api_version_request: version: 4.13.1 hostname: wazuh.master 
-2025-09-30 13:05:01,705 - /opt/health_check/pipeline_ui_tests.py - INFO - Selenium Test Gracefulyl PASSED
-2025-09-30 13:05:01,706 - /opt/health_check/pipeline_ui_tests.py - INFO - -----------------------

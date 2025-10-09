@@ -1,0 +1,122 @@
+- name: Ensure health_check virtualenv exists
+  ansible.builtin.shell: |
+    set -o pipefail
+    export PYENV_ROOT="/root/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$($PYENV_ROOT/bin/pyenv init -)"
+    eval "$($PYENV_ROOT/bin/pyenv virtualenv-init -)"
+    if ! pyenv virtualenvs --bare | grep -q '^health_check$'; then
+      pyenv virtualenv health_check
+    fi
+  args:
+    executable: /bin/bash
+  environment:
+    PYENV_ROOT: /root/.pyenv
+    PATH: /root/.pyenv/bin:{{ ansible_env.PATH }}
+  changed_when: not pyenv_dir.stat.exists
+  become: true
+
+- name: Install requirements into health_check venv
+  ansible.builtin.shell: |
+    set -o pipefail
+    export PYENV_ROOT="/root/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+    pyenv activate health_check
+    pip install --upgrade pip
+    pip install --break-system-packages -r /opt/health_check/requirements.txt
+  args:
+    executable: /bin/bash
+  changed_when: not pyenv_dir.stat.exists
+  become: true
+
+- name: Wait for Wazuh Dashboard (8443) to be available
+  ansible.builtin.wait_for:
+    host: "127.0.0.1"
+    port: 8443
+    timeout: 480
+    state: started
+
+- name: Wait for Wazuh API (55000) to be available
+  ansible.builtin.wait_for:
+    host: "127.0.0.1"
+    port: 55000
+    timeout: 480
+    state: started
+
+- name: Wait for Wazuh API (HTTPS on 55000) to be available
+  ansible.builtin.uri:
+    url: "https://127.0.0.1:55000/"
+    method: GET
+    validate_certs: false
+    status_code: 401
+  register: wazuh_api_check
+  until: '"No authorization token provided" in wazuh_api_check.json.detail'
+  retries: 100
+  delay: 10
+
+- name: Wait for HTTPS to be ready
+  ansible.builtin.uri:
+    url: "https://127.0.0.1/app/login"
+    method: GET
+    validate_certs: false
+    status_code: 200
+  register: result
+  retries: 60
+  delay: 20
+  until: result.status == 200
+
+- name: Wait for Wazuh dashboard is ready
+  ansible.builtin.uri:
+    url: "https://127.0.0.1/app/login"
+    method: GET
+    validate_certs: false
+    return_content: true
+  register: result
+  retries: 60
+  delay: 20
+  until: "'Wazuh dashboard server is not ready yet' not in result.content"
+
+- name: Run selenium health check with env vars
+  ansible.builtin.shell: |
+    set -o pipefail
+    export PYENV_ROOT="/root/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+    pyenv activate health_check
+
+    export WAZUH_URL='https://127.0.0.1:8443/app/login'
+    export DEBUG=1
+    export WAZUH_USER='{{ indexerusername }}'
+    export WAZUH_PASS='{{ indexerpassword }}'
+    export API_URL='https://127.0.0.1:55000'
+    export API_USER='{{ apiusername }}'
+    export API_PASS='{{ apipassword }}'
+    python3 /opt/health_check/pipeline_ui_tests.py
+  args:
+    executable: /bin/bash
+  register: healthcheck_result
+  changed_when: not pyenv_dir.stat.exists
+  become: true
+
+- name: Fetch health check log to controller
+  ansible.builtin.fetch:
+    src: /opt/health_check/heath_check.log
+    dest: "{{ base_dir }}/reports/health_check/health_check.log"
+    flat: true
+
+- name: Notify the user Dashboard check failed
+  ansible.builtin.fail:
+    msg: |
+        ************* Wazuh Dashboard Check Failed ! *************
+  when: healthcheck_result.rc != 0
+
+- name: Notify the user Dashboard is up
+  ansible.builtin.debug:
+    var: banner_msg
+  vars:
+    banner_msg: |
+      ************* Wazuh Dashboard is READY ! *************
+  when: healthcheck_result.rc == 0

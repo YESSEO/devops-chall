@@ -1,0 +1,5 @@
+- name: Install Python 3 on Debian/Ubuntu
+  ansible.builtin.apt:
+    name: python3
+    state: present
+    update_cache: yes

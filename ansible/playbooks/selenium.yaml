@@ -1,0 +1,25 @@
+- name: Installing python pyenv, pip3 dependencies
+  hosts: managers
+  become: true
+  tasks:
+    - name: Pyenv, dependencies
+      ansible.builtin.include_tasks: ../tasks/tests/install_pyenv.yml
+
+- name: Copy Health Check script
+  hosts: managers
+  become: true
+  vars_files:
+    - ../group_vars/all.yml
+  tasks:
+    - name: Copying files
+      ansible.builtin.include_tasks: ../tasks/tests/copy_healthcheck.yml
+
+- name: Health Check
+  hosts: managers
+  become: true
+  vars_files:
+    - ../group_vars/secrets/vault.yml
+    - ../group_vars/all.yml
+  tasks:
+    - name: Copying files
+      ansible.builtin.include_tasks: ../tasks/tests/health_check_py.yml

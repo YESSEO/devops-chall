@@ -1,0 +1,6 @@
+- name: Install keepalived on Debian/Ubuntu
+  ansible.builtin.apt:
+    name: keepalived
+    state: present
+    update_cache: true
+  become: true

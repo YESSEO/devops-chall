@@ -1,0 +1,10 @@
+- name: Run the generator container
+  ansible.builtin.command: "docker compose -f {{ indexers_cert_file }} run --rm generator"
+  register: generator_output
+  failed_when: generator_output.rc != 0
+  changed_when: generator_output.rc == 0
+
+
+- name: Show generator output
+  ansible.builtin.debug:
+    var: generator_output.stdout_lines
