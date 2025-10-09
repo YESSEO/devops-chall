@@ -4,3 +4,4 @@ build.sh
 clean_dockers.sh
 ansible/group_var/all.yml
 ansible/group_var/secrets/*
+pass.txt
