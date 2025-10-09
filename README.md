@@ -91,6 +91,7 @@ Only after this workflow is succussfull and conditions are met (Trivy-scan) it C
       # Docker swarm Manager host
       [managers]
       ${SWARM_MANAGER_HOSTNAME} ansible_host=${SWARM_MANAGER_IP} ansible_user=${ANSIBLE_USER} 
+<<<<<<< HEAD
 
       # Hosts worker
       [workers]
@@ -235,3 +236,50 @@ Only after this workflow is succussfull and conditions are met (Trivy-scan) it C
 ## Simulating an attack
 
 
+=======
+
+      # Hosts worker
+      [workers]
+      ${SWARM_WORKER_HOSTNAME} ansible_host=${SWARM_WORKER_IP} ansible_user=${ANSIBLE_USER}
+
+      # NFS server to host wzuh data/config & presistent data
+      [data]
+      ${NFS_SERVER_HOSTNAME} ansible_host=${NFS_SERVER_IP} ansible_user=${ANSIBLE_USER}
+    ```
+    - Ansible Secrets & certs, keys
+    ```bash
+      # Define certificate folder and file
+      cert_folder="$GITHUB_WORKSPACE/ansible/group_vars/secrets/certs"
+      cert_file="$cert_folder/test.crt"
+
+      # Ensure the folder exists
+      if [[ ! -d "$cert_folder" ]]; then
+        echo "Directory $cert_folder does not exist. Creating it..."
+        mkdir -p "$cert_folder"
+      else
+        echo "Directory $cert_folder already exists."
+      fi
+
+      # Write the certificate from GitHub secret
+      base64 --decode > "$cert_file" <<EOF
+      ${{ secrets.SSL_CRT }}
+      EOF
+
+      chmod 600 "$cert_file"
+      echo "Certificate written to $cert_file"
+
+      # Write the key from GitHub secret
+      key_file="$cert_folder/test.key"
+      base64 --decode > "$key_file" <<EOF
+      ${{ secrets.SSL_KEY }}
+      EOF
+      echo "Key written to $key_file"
+      
+      # Write the vault from GitHub secret
+      secret_vault_file="$GITHUB_WORKSPACE/ansible/group_vars/secrets/vault.yml"
+      base64 --decode > "$secret_vault_file" <<EOF
+      ${{ secrets.ANSIBLE_VAULT }}
+      EOF
+    ```
+
+>>>>>>> c53b8c9 (README.md)
