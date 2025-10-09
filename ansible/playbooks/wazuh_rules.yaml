@@ -6,5 +6,5 @@
     - ../group_vars/all.yml
   tasks:
     - name: Copy, reload
-      #ansible.builtin.include_tasks: ../tasks/wazuh/copy_rules.yml
+      ansible.builtin.include_tasks: ../tasks/wazuh/copy_rules.yml
       ansible.builtin.include_tasks: ../tasks/wazuh/reload_master.yml
