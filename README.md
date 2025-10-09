@@ -91,6 +91,7 @@ Only after this workflow is succussfull and conditions are met (Trivy-scan) it C
       # Docker swarm Manager host
       [managers]
       ${SWARM_MANAGER_HOSTNAME} ansible_host=${SWARM_MANAGER_IP} ansible_user=${ANSIBLE_USER} 
+<<<<<<< HEAD
 
       # Hosts worker
       [workers]
@@ -235,3 +236,149 @@ Only after this workflow is succussfull and conditions are met (Trivy-scan) it C
 ## Simulating an attack
 
 
+=======
+
+      # Hosts worker
+      [workers]
+      ${SWARM_WORKER_HOSTNAME} ansible_host=${SWARM_WORKER_IP} ansible_user=${ANSIBLE_USER}
+
+      # NFS server to host wzuh data/config & presistent data
+      [data]
+      ${NFS_SERVER_HOSTNAME} ansible_host=${NFS_SERVER_IP} ansible_user=${ANSIBLE_USER}
+    ```
+    - Ansible Secrets & certs, keys
+    ```bash
+      # Define certificate folder and file
+      cert_folder="$GITHUB_WORKSPACE/ansible/group_vars/secrets/certs"
+      cert_file="$cert_folder/test.crt"
+
+      # Ensure the folder exists
+      if [[ ! -d "$cert_folder" ]]; then
+        echo "Directory $cert_folder does not exist. Creating it..."
+        mkdir -p "$cert_folder"
+      else
+        echo "Directory $cert_folder already exists."
+      fi
+
+      # Write the certificate from GitHub secret
+      base64 --decode > "$cert_file" <<EOF
+      ${{ secrets.SSL_CRT }}
+      EOF
+
+      chmod 600 "$cert_file"
+      echo "Certificate written to $cert_file"
+
+      # Write the key from GitHub secret
+      key_file="$cert_folder/test.key"
+      base64 --decode > "$key_file" <<EOF
+      ${{ secrets.SSL_KEY }}
+      EOF
+      echo "Key written to $key_file"
+      
+      # Write the vault from GitHub secret
+      secret_vault_file="$GITHUB_WORKSPACE/ansible/group_vars/secrets/vault.yml"
+      base64 --decode > "$secret_vault_file" <<EOF
+      ${{ secrets.ANSIBLE_VAULT }}
+      EOF
+    ```
+  - Install Docks, Deploy Swarm, and configure **nfs Share** for presistant storage
+  ```yaml
+    ansible_docker_nfs_vvrp_dependencies:
+    runs-on: self-hosted
+    environment: prod
+    needs: ansible_dependencies
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: false # keep existing files
+
+      - name: Initialize Docker Swarm, configure NFS share, and set up VRRP for HA
+        run: |
+          ANSIBLE_VAULT_PASSWORD_FILE=<(echo ${{ secrets.ANSIBLE_VAULT_SECRET }}) ansible-playbook -i ansible/inventory/inventory.ini \
+            ansible/playbooks/docker_nfs_alived.yaml
+  ```
+  - Deploys Wazuh muti-node
+  ```yaml
+    ansible_deploy_stack:
+    runs-on: self-hosted
+    environment: prod
+    needs: ansible_docker_nfs_vvrp_dependencies
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: Deploy Wazuh multi-node stack with replication
+        run: |
+          ANSIBLE_VAULT_PASSWORD_FILE=<(echo ${{ secrets.ANSIBLE_VAULT_SECRET }}) ansible-playbook -i ansible/inventory/inventory.ini \
+            ansible/playbooks/stack_deploy.yaml
+
+  ```
+  - Deploys **Nginx reverse proxy**
+  ```yaml
+    ansible_deploy_nginx:
+    runs-on: self-hosted
+    environment: prod
+    needs: ansible_deploy_stack
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: Configure Nginx reverse proxy (self-signed certificates, no domain - no money -\__(;-;)__/- )
+        run: |
+          ANSIBLE_VAULT_PASSWORD_FILE=<(echo ${{ secrets.ANSIBLE_VAULT_SECRET }}) ansible-playbook -i ansible/inventory/inventory.ini \
+            ansible/playbooks/nginx_reverse_proxy.yaml
+
+  ```
+  - Selenium test
+  ```yaml
+    ansible_selenium_test:
+    runs-on: self-hosted
+    environment: prod
+    needs: ansible_deploy_nginx 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: Run Selenium tests
+        run: |
+          ANSIBLE_VAULT_PASSWORD_FILE=<(echo ${{ secrets.ANSIBLE_VAULT_SECRET }}) ansible-playbook -i ansible/inventory/inventory.ini \
+            ansible/playbooks/selenium.yaml
+
+  ```
+  - Copies Wazuh rules & reload wazuh Master via API call
+  ```yaml
+    ansible_wazuh_rules:
+    runs-on: self-hosted
+    environment: prod
+    needs: ansible_selenium_test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: Run Selenium tests
+        run: |
+          ANSIBLE_VAULT_PASSWORD_FILE=<(echo ${{ secrets.ANSIBLE_VAULT_SECRET }}) ansible-playbook -i ansible/inventory/inventory.ini \
+            ansible/playbooks/wazuh_rules.yaml
+
+  ```
+
+> [!WARNING]  
+> This Deployment uses default credentials for wazuh for testing
+> make sure to change your credentials in the ansible vault
+> See [Ansible vault example](https://github.com/YESSEO/devops-chall/blob/main/ansible/group_vars/secrets/vault.example.yaml)
+
+# SOC & Detection rules
+
+## Simulating an attack
+
+
+>>>>>>> c53b8c9 (README.md)
