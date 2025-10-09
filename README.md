@@ -13,6 +13,7 @@ The pipeline automatically builds, scans, tests, and deploys containerized appli
 
 * The pipeline runs automatically on:
 	- **Pull requests** to `main` from `pre-prod` branch
+    
 	- **Push events** to `main`
 
 ## CI/CD Pipeline Steps [PR]
