@@ -1,4 +1,9 @@
-- name: Copy wazuh-docker folder to NFS share
-  ansible.legacy.copy:
-    src: "{{base_dir}}/rules"
-    dest: "/mnt/swrmd_nfs/wazuh/master/etc/"
+- name: Copy rules folder to NFS share (force overwrite)
+  ansible.builtin.synchronize:
+    src: "{{ base_dir }}/rules/"
+    dest: "{{ nfs_mount_point }}/wazuh/master/etc/rules/"
+    recursive: yes
+    rsync_opts:
+      - "--checksum"
+      - "--verbose"
+      - "--out-format='<<CHANGED>>%i %n%L'"
