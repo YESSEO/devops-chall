@@ -92,8 +92,6 @@ Only after this workflow is succussfull and conditions are met (Trivy-scan) it C
       # Docker swarm Manager host
       [managers]
       ${SWARM_MANAGER_HOSTNAME} ansible_host=${SWARM_MANAGER_IP} ansible_user=${ANSIBLE_USER} 
-<<<<<<< HEAD
-
       # Hosts worker
       [workers]
       ${SWARM_WORKER_HOSTNAME} ansible_host=${SWARM_WORKER_IP} ansible_user=${ANSIBLE_USER}
