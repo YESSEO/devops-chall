@@ -2,15 +2,17 @@
 
 ## On PR container images
 
+> [!WARNING]  
+> This Deployment uses default credentials for wazuh for testing
+> make sure to change your credentials in the ansible vault
+> See [Ansible vault example](https://github.com/YESSEO/devops-chall/blob/main/ansible/group_vars/secrets/vault.example.yaml)
+
 * Build Container images
 With pushing a wazuh deployment package from the official [wazuh](https://github.com/wazuh/wazuh-docker) repository  to **pre-prod** branch
 
 ```bash
-ceasar@dev: ~/fun/build/cirescyber/soc/lab pre-prod!                                                                                                                                          
 $ git add wazuh-docker-4.13.1/                                                                                                                                                                
                                     [12:48:24]                                                                                                                                               
-                                                                                                                                                                                            
-ceasar@dev: ~/fun/build/cirescyber/soc/lab pre-prod!                                                                                                                                          
 $ git commit -m "DockerFile"                                                                                                                                                                  
                                     [12:48:27]                                                                                                                                               
 [pre-prod 9e1d950] DockerFile                                                                                                                                                                 
@@ -20,7 +22,6 @@ create mode 100644 wazuh-docker-4.13.1/wazuh-docker-4.13.1_BACKUP/.github/.goss.
 create mode 100644 wazuh-docker-4.13.1/wazuh-docker-4.13.1_BACKUP/.github/free-disk-space/action.yml                                                                                         
 create mode 100755 wazuh-docker-4.13.1/wazuh-docker-4.13.1_BACKUP/.github/multi-node-filebeat-check.sh                                                                                       
 ...
-ceasar@dev: ~/fun/build/cirescyber/soc/lab pre-prod!
 $ git push                                                        [12:48:46]
 Enumerating objects: 154, done.
 Counting objects: 100% (154/154), done.
@@ -371,14 +372,86 @@ Only after this workflow is succussfull and conditions are met (Trivy-scan) it C
 
   ```
 
-> [!WARNING]  
-> This Deployment uses default credentials for wazuh for testing
-> make sure to change your credentials in the ansible vault
-> See [Ansible vault example](https://github.com/YESSEO/devops-chall/blob/main/ansible/group_vars/secrets/vault.example.yaml)
+
+## Wazuh Dashboard
+![Wazuh Dashboard](docs/images/WazuhDashboard.png)
+
+------------------------
 
 # SOC & Detection rules
 
 ## Simulating an attack
 
+* This rules does the following:
+- Check if there's 5 faild login atemps in a 120s timeframe comming from the same srcip & user
+```xml
+<group name="custom-test,">
+<rule id="134019" level="10" frequency="5" timeframe="120">
+    <decoded_as>sshd</decoded_as>
+    <if_matched_sid>5760</if_matched_sid>
+     <same_user />
+     <same_srcip />
+    <description>user $(dstuser) has more than 5 failed login attempts</description>
+  </rule>
+</group>
+```
+- If the first rule is triggered and we got a successfull login it raises an alert
+```xml
+<group name="custom-test2,">
+  <rule id="134020" level="14">
+    <if_sid>5716</if_sid>
+    <if_matched_sid>134019</if_matched_sid>
+    <description>Successful connection from IP $(srcip) after failed attempts</description>
+  </rule>
+</group>
 
->>>>>>> c53b8c9 (README.md)
+```
+- if there's 5 failed login atemps with the same srcip
+
+```xml
+<group name="suss-logins,invalid-user">
+<rule id="134021" level="10" frequency="5" timeframe="120">
+    <decoded_as>sshd</decoded_as>
+    <if_matched_sid>5710</if_matched_sid>
+     <same_srcip />
+    <description>user $(dstuser) Does not exits but has more than 5 failed login attempts</description>
+  </rule>
+</group>
+```
+- and its followed by a valid user in the system it raises an alert
+```xml
+<group name="bruteF-success,">
+  <rule id="134022" level="14">
+    <if_sid>5760</if_sid>
+    <if_matched_sid>134021</if_matched_sid>
+    <description>Login attempts with a valid user from $(srcip) after failed invalid user attempts,</description>
+  </rule>
+</group>
+```
+
+### Proof of concept
+
+* To test our rules i decided to run Hydra against my managed host
+
+```
+$ hydra -L users.txt -P pass.txt 192.168.48.135 ssh                                                                                                                                [23:26:47]
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-10-09 23:26:48
+[WARNING] Many SSH configurations limit the number of parallel tasks, it is recommended to reduce the tasks: use -t 4
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 120 login tries (l:2/p:60), ~8 tries per task
+[DATA] attacking ssh://192.168.48.135:22/
+[22][ssh] host: 192.168.48.135   login: ansible   password: <REDACTED>
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-10-09 23:27:12
+```
+![Hydra poc](docs/images/Bute_force_evedence.png)
+
+* Which successfully generated alerts on the Wazuh dashboard
+
+![Alerts](docs/images/alerts.png)
+
+* Filtering with rule id's
+
+
+
