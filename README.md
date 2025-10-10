@@ -451,7 +451,12 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-10-09 23:27:
 
 ![Alerts](docs/images/alerts.png)
 
-* Filtering with rule id's
+* Filtering with rule id  `134020` - Success after mutiple failed atempt from same `srcip` and `user`
+
+![Alert Success Login after fail](docs/images/Success_after_fail.png)
+
+
+* Filtering with rule id  `134022` - Hitting a valid user after mutple failed non existing user rule is hit
 
 
 
